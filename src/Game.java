@@ -24,7 +24,8 @@ import java.util.Scanner;
  */
 public class Game {
   private Parser parser;
-  private Room currentRoom;
+  private Room currentRoom; //each room has an inventory
+  private Inventory inventory; //player inventory 
   // This is a MASTER object that contains all of the rooms and is easily
   // accessible.
   // The key will be the name of the room -> no spaces (Use all caps and
@@ -33,6 +34,39 @@ public class Game {
   // masterRoomMap.get("GREAT_ROOM") will return the Room Object that is the Great
   // Room (assuming you have one).
   private HashMap<String, Room> masterRoomMap;
+  private HashMap<String, Item> masterItemMap;
+
+	private void initItems(String fileName) throws Exception{
+		Scanner itemScanner;
+		masterItemMap = new HashMap<String, Item>();
+
+		try {
+			
+			itemScanner = new Scanner(new File(fileName));
+			while (itemScanner.hasNext()) {
+				Item item = new Item();
+				String itemName = itemScanner.nextLine().split(":")[1].trim(); //THIS IS WHERE TO EDIT TO MAKE TWO WORD ITEMS
+				item.setName(itemName);
+				String itemDesc = itemScanner.nextLine().split(":")[1].trim();
+				item.setDescription(itemDesc);	
+				Boolean openable = Boolean.valueOf(itemScanner.nextLine().split(":")[1].trim());
+				item.setOpenable(openable);
+				
+				masterItemMap.put(itemName.toUpperCase().replaceAll(" ", "_"), item);
+				
+				String temp = itemScanner.nextLine();
+				String itemType = temp.split(":")[0].trim();
+				String name = temp.split(":")[1].trim();
+				if (itemType.equals("Room"))
+					masterRoomMap.get(name).getInventory().addItem(item);
+				else
+					masterItemMap.get(name).addItem(item);
+			}
+		}catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+
 
   private void initRooms(String fileName) throws Exception {
     masterRoomMap = new HashMap<String, Room>();
@@ -94,6 +128,9 @@ public class Game {
     try {
       initRooms("data/rooms.dat");
       currentRoom = masterRoomMap.get("HANGAR");
+      inventory = new Inventory();
+      initItems("data/items.dat");
+
     } catch (Exception e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -108,9 +145,15 @@ public class Game {
     printWelcome();
     // Enter the main command loop. Here we repeatedly read commands and
     // execute them until the game is over.
-
     boolean finished = false;
     while (!finished) {
+
+
+      //BE ABLE TO PROGRESS TO DIFFERENT EVENTS IN THE STORY BASED OFF OF THE ITEMS YOU HAVE IN YOUR INVENTORY
+      if (inventory.getInventory().contains("mealKit"))
+        System.out.println("ayyayaya");
+
+      
       Command command = parser.getCommand();
       finished = processCommand(command);
     }
@@ -130,7 +173,7 @@ public class Game {
     System.out.println();
     System.out.println("You are aboard a space station located on the outer rims of the Milky Ray.");
     System.out.println("You have just woken up, and you are currently gathering some equipment from around the ship to take with you before you take your fighter jet and go on your assigned scouting mission.");
-    System.out.println("Your task: Walk around the ship and collect the following items: Meal pack, laser gun, medical kit, tarp. Return to the hanger once these items are collected.");
+    System.out.println("Your task: Walk around the ship and collect the following items: Meal pack, laser gun, medical kit, tarp. Return to the hangar once these items are collected.");
     System.out.println();
     System.out.println(currentRoom.longDescription());
   }
@@ -160,9 +203,85 @@ public class Game {
       System.out.println("Do you really think you should be eating at a time like this?");
     }else if (commandWord.equals("jump")){
       System.out.println("jump up and down");
+
+    }else if (commandWord.equals("take")) {
+      if (!command.hasSecondWord())
+        System.out.println("Take what?");
+      else
+        takeItem(command.getSecondWord());
+    }else if (commandWord.equals("drop")) {
+    if (!command.hasSecondWord())
+      System.out.println("Drop what?");
+    else
+      dropItem(command.getSecondWord());
+    }else if (commandWord.equals("i")){
+      System.out.println("You are carrying the following: " + inventory);
+    }else if (commandWord.equals("open")){
+      if (!command.hasSecondWord())
+        System.out.println("Open what?");
+      else
+        openItem(command.getSecondWord());
     }
+
+
+
     return false;
   }
+
+
+  private void openItem(String itemName) {
+    Item item = inventory.contains(itemName);
+    if (item != null) //item is in inventory
+      System.out.println(item.displayContents());
+    else //item is not in inventory
+      System.out.println("You are not carrying a " + itemName);
+  }
+
+  private void takeItem(String itemName) {
+      Inventory temp = currentRoom.getInventory(); //room inventory
+      Item item = temp.removeItem(itemName);//this is the item the player picks up from the room. Item can have a value of null (if it is null then that means that the item they command to take is not in the room inventory)
+      boolean isInInventory = false;
+
+      if (item != null){ //if the player picks up an item that is in the room inventory 
+        if (inventory.addItem(item)) //adding item that was in room inventory to player's inventory
+          System.out.println("You have taken the " + itemName);
+        else //some items cannot be picked up.
+          System.out.println("You were unable to take the " + itemName); 
+      }
+      else{ //if the player commands to pick up an item that is not in the room inventory 
+        for (int i=0; i<inventory.getInventory().size(); i++){ //go through the player's inventory to see if requested item is within any items that can contain other items
+          temp = inventory.getInventory().get(i).getContents(); //the contents of item that can hold other items
+          if (temp != null){ //if the item in the inventory we are currently focusing on can hold other items
+            item = temp.removeItem(itemName);
+            if (item != null){
+              if (inventory.addItem(item)){ //adding item that was in the item that can hold other item's inventory to player's inventory
+                System.out.println("You have taken the " + itemName);
+                isInInventory = true;
+              }else //some items cannot be picked up.
+                System.out.println("You were unable to take the " + itemName); 
+            }
+          
+          }
+        }
+
+        if (!isInInventory) //if requested item is not in room or in any of the items that can store other items
+          System.out.println("There is no " + itemName + " here."); 
+      }
+  }
+
+  
+  private void dropItem(String itemName) {
+      Item item = inventory.removeItem(itemName);
+
+      if (item != null){
+        if (currentRoom.getInventory().addItem(item))
+          System.out.println("you have dropped the " + itemName);
+        else  System.out.println("You were unable to drop the " + itemName);
+      }
+      else
+        System.out.println("You are not carrying a " + itemName + "."); 
+  }
+
 
   // implementations of user commands:
   /**

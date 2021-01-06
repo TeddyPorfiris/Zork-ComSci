@@ -1,0 +1,20 @@
+Item Name: box
+Item Description: A cardboard box used to store items found during meal times.
+Openable: true
+Room: CAFETERIA
+Item Name: mealKit
+Item Description: A packaged meal containg food and drink.
+Openable: false
+Item: BOX
+Item Name: blaster
+Item Description: A powerful laser gun. Can be used to shoot enemies, blast down small objects like trees or thin pieces of rock, among other things.
+Openable: false
+Room: WEAPONS
+Item Name: tarp
+Item Description: A wide plastic blanket that can provide shelter by covering up spaces.
+Openable: false
+Room: STORAGE
+Item Name: medKit
+Item Description: A small box with equipment to be used to heal yourself when ill/injured.
+Openable: false
+Room: STORAGE
