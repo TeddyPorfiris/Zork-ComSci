@@ -1,9 +1,94 @@
+Room Name: Hangar
+Room Description:  Here, you can board your spacecraft and depart from the station.  
+Exit Rooms: N-Cafeteria, S-Storage, W-Dorm
+Room Name: Dorm
+Room Description:  All soldiers sleep here in the dorm room.
+Exit Rooms: N-Washroom, E-Hangar, S-Navigation, W-Weapons
+Room Name: Cafeteria
+Room Description:  This is where the soldiers eat their meals and where all the food/drink is held. 
+Exit Rooms: S-Hangar, W-Washroom
+Room Name: Storage
+Room Description:  All of our station's equipment is held in this room.
+Exit Rooms: N-Hangar, W-Navigation
+Room Name: Navigation
+Room Description:  Here, our pilots are able to steer the station.
+Exit Rooms: N-Dorm, E-Storage
+Room Name: Weapons
+Room Description:  All guns, knives, bombs, and other types of weapons are held here.
+Exit Rooms: E-Dorm
+Room Name: Washroom
+Room Description:  This is where the soldiers can freshen up and do their business.
+Exit Rooms: E-Cafeteria, S-Dorm
+Room Name: Crash Site
+Room Description:  Your ship crash-landed here. This land can be used as a base.
+Exit Rooms: N-Ship, E-Open Field, S-Rocky Terrain, W-Ocean
 Room Name: Ship
-Room Description:  This is room<br>1
-Exit Rooms: N-Room 2, D-Room 3
-Room Name: Room 2
-Room Description:  This is Room 2
-Exit Rooms: W-Room 1, U-Room 3
-Room Name: Room 3
-Room Description:  You are upstairs.
-Exit Rooms: D-Room 2
+Room Description:  You're now inside what's left of your space ship.
+Exit Rooms: E-Storage Space, S-Crash Site, W-Cockpit
+Room Name: Cockpit
+Room Description:  Where the ship is piloted.  
+Exit Rooms: E-Ship
+Room Name: Storage Space
+Room Description:  Spare space at the back of the ship where equipment is held.  
+Exit Rooms: W-Ship
+Room Name: Ocean
+Room Description:  A large body of water to the west of your crash site.  
+Exit Rooms: E-Crash Site
+Room Name: Open Field
+Room Description:  A grassy chunk of flatland.  
+Exit Rooms: N-Cafeteria, S-Storage, W-Dorm
+Room Name: Cliff
+Room Description:  A cutoff of land preventing you from going any further.  
+Exit Rooms: N-Cliff, E-Forest, S-Mountainous Path, W-Crash Site
+Room Name: Forest
+Room Description:  A vast land full of trees and bushes.  
+Exit Rooms: W-Open Field
+Room Name: Mountainous Path
+Room Description:  A narrow strip of land with mountains on either side.
+Exit Rooms: N-Open Field, E-Cluster of Boulders, W-Rocky Terrain
+Room Name: Cluster of Boulders
+Room Description:  A wall of large rocks preventing you from going any further.  
+Exit Rooms: W-Mountainous Path
+Room Name: Rocky Terrain
+Room Description:  Here, you can board your spacecraft here and depart from the station.  
+Exit Rooms: N-Crash Site, E-Mountainous Path, S-Mountain Ridge, W-River
+Room Name: River
+Room Description:  A medium-sized body of water.  
+Exit Rooms: E-Rocky Terrain
+Room Name: Mountain Ridge
+Room Description:  A wall of mountain cutting off your path. It can be surpassed but only with proper climbing equipment.  
+Exit Rooms: N-Rocky Terrain, S-1/4 Way Up Left Side of Mountain
+Room Name: 1/4 Way Up Left Side of Mountain
+Room Description: Just a bit up the left side of the mountain.
+Exit Rooms: N-Mountain Ridge, S-1/2 Way Up Left Side of Mountain
+Room Name: 1/2 Way Up Left Side of Mountain
+Room Description:  Half way from the foot of the left side of the mountain.
+Exit Rooms: N-1/4 Way Up Left Side of Mountain, S-Mysterious Room
+Room Name: Mysterious Room
+Room Description:  Hidden room within the mountain itself.
+Exit Rooms: N-1/2 Way Up Left Side of Mountain, S-1/4 way up right side of mountain
+Room Name: 1/4 way up right side of mountain
+Room Description:  Just a bit up the right side of the mountain.
+Exit Rooms: N-Mysterious Room, S-Secret Base
+Room Name: Secret Base
+Room Description:  The hideout of the man that rescued you.
+Exit Rooms: N-1/4 way up right side of mountain, E-Barren Land, S-Small Forest, W-Chunks of Rock
+Room Name: Barren Land
+Room Description: A dirty, rocky, wasteland.
+Exit Rooms: S-Ravine, W-Secret Base
+Room Name: Chunks of Rock
+Room Description:  A mound of large boulders blocking your path.
+Exit Rooms: E-Secret Base
+Room Name: Small Forest
+Room Description:  A small area populated by several trees.
+Exit Rooms: N-Rocky Terrain
+Room Name: Ravine
+Room Description:  A damp opening in the surface of the planet.
+Exit Rooms: N-Barren Land, E-Hidden Escape Base, S-Grassy Field
+Room Name: Hidden Escape Base
+Room Description:  Place to escape from planet.
+Exit Rooms: W-Ravine
+Room Name: Grassy Field
+Room Description:  Grassy chunk of land.
+Exit Rooms: N-Ravine, W-Small Forest
+

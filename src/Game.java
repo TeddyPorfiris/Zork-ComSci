@@ -87,10 +87,13 @@ public class Game {
   /**
    * Create the game and initialise its internal map.
    */
+
+
+  //CHANGE ROOM YOU START OFF HERE
   public Game() {
     try {
       initRooms("data/rooms.dat");
-      currentRoom = masterRoomMap.get("SHIP");
+      currentRoom = masterRoomMap.get("HANGAR");
     } catch (Exception e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -117,11 +120,17 @@ public class Game {
   /**
    * Print out the opening message for the player.
    */
+
+  //CHANGE WELCOME MESSAGE
   private void printWelcome() {
     System.out.println();
-    System.out.println("Welcome to Zork!");
-    System.out.println("Zork is a new, incredibly boring adventure game.");
+    System.out.println("Welcome to Space Survival!");
+    System.out.println("Space Survival is an action adventure game full of mystery and strategy.");
     System.out.println("Type 'help' if you need help.");
+    System.out.println();
+    System.out.println("You are aboard a space station located on the outer rims of the Milky Ray.");
+    System.out.println("You have just woken up, and you are currently gathering some equipment from around the ship to take with you before you take your fighter jet and go on your assigned scouting mission.");
+    System.out.println("Your task: Walk around the ship and collect the following items: Meal pack, laser gun, medical kit, tarp. Return to the hanger once these items are collected.");
     System.out.println();
     System.out.println(currentRoom.longDescription());
   }
@@ -130,6 +139,8 @@ public class Game {
    * Given a command, process (that is: execute) the command. If this command ends
    * the game, true is returned, otherwise false is returned.
    */
+
+  //CHANGE RESULTS BASED OFF OF COMMANDS
   private boolean processCommand(Command command) {
     if (command.isUnknown()) {
       System.out.println("I don't know what you mean...");
@@ -170,6 +181,8 @@ public class Game {
    * Try to go to one direction. If there is an exit, enter the new room,
    * otherwise print an error message.
    */
+
+  //CREATE THIRD WORD FOR COMMAND BY GOING TO COMMAND FILE AND ADDING THIRD WORD
   private void goRoom(Command command) {
     if (!command.hasSecondWord()) {
       // if there is no second word, we don't know where to go...
