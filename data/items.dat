@@ -18,3 +18,7 @@ Item Name: medKit
 Item Description: A small box with equipment to be used to heal yourself when ill/injured.
 Openable: false
 Room: STORAGE
+Item Name: engineer
+Item Description: One of the ship engineers wants to talk to you!
+Openable: false
+Room: RANDOM

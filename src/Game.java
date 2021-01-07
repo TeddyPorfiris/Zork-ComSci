@@ -1,8 +1,8 @@
 //THIS IS WHERE YOU UNDERSTAND WHAT THE COMMANDS MEAN. YOU CAN ALSO ACCESS THINGS LIKE INVENTORY, ITEMS IN ROOMS, ETC. THIS IS WHERE ALL THE GAME STUFF HAPPENS. YOU WILL WRITE MOST OF YOUR CODE HERE.
 
-
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -38,28 +38,34 @@ public class Game {
 
 	private void initItems(String fileName) throws Exception{
 		Scanner itemScanner;
-		masterItemMap = new HashMap<String, Item>();
-
+    masterItemMap = new HashMap<String, Item>();
+    
 		try {
 			
 			itemScanner = new Scanner(new File(fileName));
 			while (itemScanner.hasNext()) {
-				Item item = new Item();
-				String itemName = itemScanner.nextLine().split(":")[1].trim(); //THIS IS WHERE TO EDIT TO MAKE TWO WORD ITEMS
-				item.setName(itemName);
-				String itemDesc = itemScanner.nextLine().split(":")[1].trim();
+				Item item = new Item(); //creates new item object
+				String itemName = itemScanner.nextLine().split(":")[1].trim(); //gets item name by parsing items.dat 
+				item.setName(itemName); //sets the name of this new item object that we created to what we defined above
+				String itemDesc = itemScanner.nextLine().split(":")[1].trim(); 
 				item.setDescription(itemDesc);	
 				Boolean openable = Boolean.valueOf(itemScanner.nextLine().split(":")[1].trim());
 				item.setOpenable(openable);
 				
-				masterItemMap.put(itemName.toUpperCase().replaceAll(" ", "_"), item);
+        masterItemMap.put(itemName.toUpperCase().replaceAll(" ", "_"), item); //hashmap of all items
+        System.out.println(masterItemMap);
 				
-				String temp = itemScanner.nextLine();
+				String temp = itemScanner.nextLine(); 
 				String itemType = temp.split(":")[0].trim();
-				String name = temp.split(":")[1].trim();
-				if (itemType.equals("Room"))
-					masterRoomMap.get(name).getInventory().addItem(item);
-				else
+				String name = temp.split(":")[1].trim(); 
+        if (itemType.equals("Room")) //adding items from items.dat to their respective rooms
+          if (name.equals("RANDOM")){  //if the name of the room is RANDOM (i.e. we want to initialize the item to a random room)
+            int randomRoomIndex = (int)(Math.random() * masterItemMap.size()); //generate random index of the hashmap that contains all the rooms
+            ArrayList<String> roomKeys = new ArrayList<String>(masterRoomMap.keySet()); //turn hashmap into ArrayList format
+            masterRoomMap.get(roomKeys.get(randomRoomIndex)).getInventory().addItem(item); //get a random room by taking an item from this arrayList at the random index
+          }else 
+					  masterRoomMap.get(name).getInventory().addItem(item); //adding item to respective room (name is the name of the room)
+				else //adding item to respective item that can hold other items (name is the name of the item that can hold other items)
 					masterItemMap.get(name).addItem(item);
 			}
 		}catch (FileNotFoundException e) {
@@ -118,6 +124,20 @@ public class Game {
     }
   }
 
+
+  private void readConversation(String fileName) throws Exception {
+    Scanner conversationScanner;
+
+    try {
+        conversationScanner = new Scanner(new File(fileName)); 
+        while (conversationScanner.hasNext()) {
+          Dialogue dialogue = new Dialogue();
+        }
+    }catch (FileNotFoundException e){
+        e.printStackTrace();
+        
+    }
+}
   /**
    * Create the game and initialise its internal map.
    */
@@ -147,11 +167,6 @@ public class Game {
     // execute them until the game is over.
     boolean finished = false;
     while (!finished) {
-
-
-      //BE ABLE TO PROGRESS TO DIFFERENT EVENTS IN THE STORY BASED OFF OF THE ITEMS YOU HAVE IN YOUR INVENTORY
-      if (inventory.getInventory().contains("mealKit"))
-        System.out.println("ayyayaya");
 
       
       Command command = parser.getCommand();

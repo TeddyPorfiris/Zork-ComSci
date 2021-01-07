@@ -5,6 +5,7 @@ public class Item {
 	private String description;
 	private Inventory items;
 	private boolean isOpenable;
+	private boolean isSpeakable;
 	
 	
 	public Item() {
@@ -16,12 +17,24 @@ public class Item {
 		return isOpenable;
 	}
 
+	public boolean isSpeakable(){
+		return isSpeakable;
+	}
+
 
 	public void setOpenable(boolean isOpenable) {
 		this.isOpenable = isOpenable;
 		if(isOpenable)
 			this.items = new Inventory(); 
 	}
+
+	/*
+	public void setSpeakable(boolean isSpeakable){
+		this.isSpeakable = isSpeakable;
+		if (isSpeakable)
+			this.conversation = new Conversation();
+	}
+	*/
 
 
 	public void setName(String name) {
