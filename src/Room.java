@@ -15,6 +15,10 @@
  * to the neighbouring room, or null if there is no exit in that direction.
  */
 import java.util.Set;
+
+import javax.xml.stream.events.Characters;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -23,6 +27,8 @@ public class Room {
   private String description;
   private HashMap<String, Room> exits; // stores exits of this room.
   private Inventory inventory;
+  //private HashMap<String, GameCharacter> characters; //characters in room 
+  private CharacterAdd characters;
 
   /**
    * Create a room described "description". Initially, it has no exits.
@@ -32,6 +38,7 @@ public class Room {
     this.description = description;
     exits = new HashMap<String, Room>();
     inventory = new Inventory();
+    characters = new CharacterAdd();
   }
 
   public Room() {
@@ -40,10 +47,19 @@ public class Room {
     description = "DEFAULT DESCRIPTION";
     exits = new HashMap<String, Room>();
     inventory = new Inventory();
+    characters = new CharacterAdd();
   }
 
   public Inventory getInventory(){
     return inventory;
+  }
+
+  public CharacterAdd getCharacters(){
+    return characters;
+  }
+
+  public void setCharacters(){
+
   }
 
   public void setExit(char direction, Room r) throws Exception {
@@ -106,7 +122,7 @@ public class Room {
    * Exits: north west
    */
   public String longDescription() {
-    return "Room: " + roomName + "\n\n" + description + "\n" + exitString() + "\nThe room contains: \n" + inventory;
+    return "Room: " + roomName + "\n\n" + description + "\n" + exitString() + "\nThe room contains the following items: \n" + inventory + "\nThe room contains the following people: \n" + characters;
   }
 
   /**

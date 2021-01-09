@@ -1,24 +1,25 @@
 Item Name: box
 Item Description: A cardboard box used to store items found during meal times.
 Openable: true
+Weight: 1
 Room: CAFETERIA
 Item Name: mealKit
-Item Description: A packaged meal containg food and drink.
+Item Description: A packaged meal containing food and drink.
 Openable: false
+Weight: 1
 Item: BOX
 Item Name: blaster
 Item Description: A powerful laser gun. Can be used to shoot enemies, blast down small objects like trees or thin pieces of rock, among other things.
 Openable: false
+Weight: 2
 Room: WEAPONS
 Item Name: tarp
 Item Description: A wide plastic blanket that can provide shelter by covering up spaces.
 Openable: false
+Weight: 1
 Room: STORAGE
 Item Name: medKit
 Item Description: A small box with equipment to be used to heal yourself when ill/injured.
 Openable: false
+Weight: 2
 Room: STORAGE
-Item Name: engineer
-Item Description: One of the ship engineers wants to talk to you!
-Openable: false
-Room: RANDOM

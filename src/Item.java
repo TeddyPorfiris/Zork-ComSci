@@ -5,7 +5,7 @@ public class Item {
 	private String description;
 	private Inventory items;
 	private boolean isOpenable;
-	private boolean isSpeakable;
+	private int weight;
 	
 	
 	public Item() {
@@ -17,25 +17,11 @@ public class Item {
 		return isOpenable;
 	}
 
-	public boolean isSpeakable(){
-		return isSpeakable;
-	}
-
-
 	public void setOpenable(boolean isOpenable) {
 		this.isOpenable = isOpenable;
 		if(isOpenable)
 			this.items = new Inventory(); 
 	}
-
-	/*
-	public void setSpeakable(boolean isSpeakable){
-		this.isSpeakable = isSpeakable;
-		if (isSpeakable)
-			this.conversation = new Conversation();
-	}
-	*/
-
 
 	public void setName(String name) {
 		this.name = name;
@@ -46,21 +32,27 @@ public class Item {
 		this.description = description;
 	}
 
+	public void setWeight(int weight) {
+		this.weight = weight;
+	}
 
-	public Item(String name, String description, boolean isOpenable) {
+
+	public Item(String name, String description, boolean isOpenable, int weight) {
 		super();
 		this.name = name;
 		this.description = description;
 		this.isOpenable = isOpenable;
 		if(isOpenable)
 			this.items = new Inventory(); 
+		this.weight = weight;
 	}
 	
-	public Item(String name, String description) {
+	public Item(String name, String description, int weight) {
 		super();
 		this.name = name;
 		this.description = description;
 		this.isOpenable = false;
+		this.weight = weight;
 	}
 
 	public String getName() {
@@ -69,6 +61,10 @@ public class Item {
 
 	public String getDescription() {
 		return description;
+	}
+
+	public int getWeight() {
+		return weight;
 	}
 	
 	public Inventory getContents() {

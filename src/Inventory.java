@@ -37,20 +37,41 @@ public class Inventory {
 
         return null;
     }
+    
+    //return true if item is in inventory. return false otherwise.
+    public Boolean inInventory(String name){
+        for (int i=0; i<items.size(); i++){
+            if (name.equals(items.get(i).getName()))
+                return true;
+        }
+
+        return false;
+    }
+
+    //returns total weight of all of player's inventory
+    public int getTotalWeight(){
+        int totalWeight = 0;
+        for (int i=0; i<items.size(); i++){ //goes through all items in player inventory, gets the weight for each item, and adds it to totalWeight variable
+            totalWeight += items.get(i).getWeight();
+        }
+
+        return totalWeight;
+    }
 
     //displays inventory
     public String toString(){
 
         if (items.size() == 0)
-            return "No items in this room.";
+            return "No items.";
 
         String msg = "";
         for (Item i : items){
             msg+= i.getName() + "\n";
         }
-
+        
         return msg;
 
     }
 
 }
+
