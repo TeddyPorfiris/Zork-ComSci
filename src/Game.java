@@ -206,19 +206,19 @@ public class Game {
   }
 
   //parsing new dat files that contain data about items, characters, and rooms that are a part of the second stage of the game
-  private void stageTwo(){
+  private boolean stageTwo(){
     try {
       initRooms("data/roomsTwo.dat");
       currentRoom = masterRoomMap.get("CRASH_SITE");
       initItems("data/itemsTwo.dat");
       initCharacters("data/charactersTwo.dat");
-      playStageTwo();
+      return playStageTwo();
 
     } catch (Exception e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
-    parser = new Parser();
+    return false;
   }
   /**
    * Main play routine. Loops until end of play.
@@ -233,20 +233,20 @@ public class Game {
       finished = processCommand(command);
     }
     System.out.println("Thank you for playing.  Good bye.");
-    in.close();
   }
 
   //begin to take commands from new map 
-  public void playStageTwo() {
+  public boolean playStageTwo() {
     System.out.println(currentRoom.longDescription());
     // Enter the main command loop. Here we repeatedly read commands and
     // execute them until the game is over.
     boolean finished = false;
     while (!finished) {
       Command command = parser.getCommand();
-      finished = processCommand(command);
+      return processCommand(command);
     }
     System.out.println("Thank you for playing.  Good bye.");
+    return false;
   }
   /**
    * Print out the opening message for the player.
@@ -318,7 +318,7 @@ public class Game {
       if (!command.hasSecondWord() || !command.hasThirdWord())
        System.out.println("Proceed from where?");
       else
-        proceed(command.getThirdWord());
+        return proceed(command.getThirdWord());
     }else if (commandWord.equals("weigh")) {
       if (!command.hasSecondWord())
         System.out.println("Weigh what?");
@@ -341,21 +341,20 @@ public class Game {
     System.out.println("You don't have that item in your inventory.");
   }
 
-  private void proceed(String thirdWord) {
+  private boolean proceed(String thirdWord) {
     if (!currentRoom.getRoomName().equalsIgnoreCase(thirdWord)) //if you are trying to proceed from a room you are not in currently
       System.out.println("You can't proceed from a room your not currently in!");
     else{
       //in order to proceed from first part of game, you have to be in the hangar and have the following items:
       if (thirdWord.equalsIgnoreCase("hangar") && inventory.inInventory("mealKit") && inventory.inInventory("blaster") && inventory.inInventory("medKit") && inventory.inInventory("tarp")){
-        spaceFight();
-        stageTwo();
-        
+        return spaceFight();
       }else
         System.out.println("You haven't found all your items in the ship to proceed yet!");
     }
+    return false;
   }
 
-  private void spaceFight() {
+  private boolean spaceFight() {
     //creating hashmaps full of command option
     HashMap<String, String> spaceFightPart1Choices = new HashMap<String, String>(); 
     spaceFightPart1Choices.put("go north", "The enemies have surrounded you! There's nowhere to go!");
@@ -368,37 +367,68 @@ public class Game {
     HashMap<String, String> spaceFightPart2Choices = new HashMap<String, String>(); 
     spaceFightPart2Choices.put("go north", "Good job! Dodging the bullets allowed both enemy ships to blow themselves up in the cross fire!");
     spaceFightPart2Choices.put("go south", "Good job! Dodging the bullets allowed both enemy ships to blow themselves up in the cross fire!");
-    spaceFightPart2Choices.put("go east", "You got shot and died! The end!");
-    spaceFightPart2Choices.put("go west", "You got shot and died! The end!");
+    spaceFightPart2Choices.put("go east", "You can't go east! You'll run into the bullets!");
+    spaceFightPart2Choices.put("go west", "You can't go west! You'll run into the bullets!");
     spaceFightPart2Choices.put("request backup", "There's no time to request backup!");
-    spaceFightPart2Choices.put("fire", "You got shot and died! The end!");
+    spaceFightPart2Choices.put("fire", "You can't fire in two directions at once!");
 
+    HashMap<String, String> spaceFightPart3Choices = new HashMap<String, String>(); 
+    spaceFightPart3Choices.put("go north", "The enemies have surrounded you! There's nowhere to go!");
+    spaceFightPart3Choices.put("go south", "The enemies have surrounded you! There's nowhere to go!");
+    spaceFightPart3Choices.put("go east", "The enemies have surrounded you! There's nowhere to go!");
+    spaceFightPart3Choices.put("go west", "The enemies have surrounded you! There's nowhere to go!");
+    spaceFightPart3Choices.put("request backup", "There's no time to request backup!");
+    spaceFightPart3Choices.put("fire", "You don't have enough fire power to take out the whole enemy fleet!");
+    spaceFightPart3Choices.put("use self-destruct button", "You escape the enemies while blowing them up but you and parts of your ship crashland on an unknown planet.");
+
+
+    
     System.out.println("You are on your flight patrol but the enemy fleet start attacking you. What do you do?");
-    
-    //get answer from user
-    String answerOne = in.nextLine().toLowerCase();
-    String responseOne = spaceFightPart1Choices.get(answerOne); 
-    int wrongAnswersOne = 0;
-    
-    while (wrongAnswersOne < 3)
-    if (responseOne != null){ //if the answer the user inputs is one of the keys in the hashMap
-      if (answerOne != "fire"){ //if the answer the user inputs is not the correct answer
-        System.out.println(responseOne);
-        wrongAnswersOne++;
-      }else{
-        System.out.println(responseOne);
-        System.out.println("Oh no! Enemy ships are shooting from east and west! What do you do?");
+    boolean spaceFightPart1 = rightAnswer(spaceFightPart1Choices, "fire", null);
+    if (spaceFightPart1){
+      System.out.println("Oh no! Enemy ships are shooting from east and west! What do you do?");
+      boolean spaceFightPart2 = rightAnswer(spaceFightPart2Choices, "go north", "go south");
+      if (spaceFightPart2){
+        System.out.println("The enemies are closing in on you! One giant blast can take out the whole fleet but you don't have enough fire power to create an explosion like that. What do you do?");
+        boolean spaceFightPart3 = rightAnswer(spaceFightPart3Choices, "use self-destruct button", null);
+        if (spaceFightPart3)
+          return stageTwo();
       }
-
-    }else{ //if the answer the user inputs is not one of the keys in the hashMap
-      System.out.println("I don't know what you mean");
-      wrongAnswersOne++;
     }
-
-    if (wrongAnswersOne >= 3)
-      System.out.println("You're out of time. The enemy fleet destroyed your ship and you died. The End");
+    return true;
 
   }
+
+  private boolean rightAnswer(HashMap<String, String> spaceFightChoices, String correctAnswer1, String correctAnswer2) {
+    boolean isCorrect = false; 
+
+    for (int i=0; i<3; i++){ //the user has three tries to get the right answer.
+      String answer = in.nextLine().toLowerCase();
+      if (answer.equalsIgnoreCase("help"))
+        printHelp();
+      String response = spaceFightChoices.get(answer);
+      if (response != null){ //if the answer the user inputs is one of the keys in the hashMap
+        if (!answer.equals(correctAnswer1) && !answer.equals(correctAnswer2)){//if the answer the user inputs is not the correct answer
+          System.out.println(response);
+        }else{
+          System.out.println(response);
+          isCorrect = true;
+          break; //break from loop if correct answer is given (we don't have to continue prompting for answers if correct answer is given)
+        }
+      }else{ //if the answer the user inputs is not one of the keys in the hashMap
+        System.out.println("That's not the best thing to do right now!");
+      }
+    }
+    if (isCorrect)
+      return true;
+    else{
+      System.out.println("You're out of time. The enemy fleet destroyed your ship and you died. The End");
+      return false;
+    }
+  }
+
+
+
 
   private void conversation(String thirdWord) {
     
