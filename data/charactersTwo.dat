@@ -1,0 +1,8 @@
+Character Name: Man
+Character Description: a mysterious man found on the abandoned planet
+Initial Dialogue: Do you want to know the history of this planet? (yes/no)
+Answer One: yes
+Answer Two: no
+Response One: Great. it starts off bla bla bla... and thats it! Bye!
+Response Two: Oh that's too bad
+Room: MOUNTAIN_RIDGE

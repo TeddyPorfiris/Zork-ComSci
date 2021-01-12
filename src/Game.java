@@ -66,7 +66,7 @@ public class Game {
 				String temp = itemScanner.nextLine(); 
 				String itemType = temp.split(":")[0].trim();
 				String name = temp.split(":")[1].trim(); 
-        if (itemType.equals("Room")) //adding items from items.dat to their respective rooms
+        if (itemType.equals("Room")) //adding items from items dat file to their respective rooms
           if (name.equals("RANDOM")){  //if the name of the room is RANDOM (i.e. we want to initialize the item to a random room)
             int randomRoomIndex = (int)(Math.random() * masterRoomMap.size()); //generate random index of the hashmap that contains all the rooms
             ArrayList<String> roomKeys = new ArrayList<String>(masterRoomMap.keySet()); //turn hashmap into ArrayList format
@@ -91,7 +91,7 @@ public class Game {
 			characterScanner = new Scanner(new File(fileName));
 			while (characterScanner.hasNext()) {
 				GameCharacter character = new GameCharacter(); //creates new GameCharacter object
-        String characterName = characterScanner.nextLine().split(":")[1].trim(); //gets character name by parsing characters.dat 
+        String characterName = characterScanner.nextLine().split(":")[1].trim(); //gets character name by parsing characters dat file
 				character.setName(characterName); //sets the name of this new character object that we created to what we defined above
       
         //set character description of new GameCharacter object
@@ -190,12 +190,13 @@ public class Game {
   //CHANGE ROOM YOU START OFF HERE
   public Game() {
     try {
-      initRooms("data/rooms.dat");
-      currentRoom = masterRoomMap.get("HANGAR");
-      inventory = new Inventory();
+        initRooms("data/roomsOne.dat");
+        currentRoom = masterRoomMap.get("HANGAR");
+        inventory = new Inventory();
 
-      initItems("data/items.dat");
-      initCharacters("data/characters.dat");
+        initItems("data/itemsOne.dat");
+        initCharacters("data/charactersOne.dat");
+    
 
     } catch (Exception e) {
       // TODO Auto-generated catch block
@@ -204,6 +205,21 @@ public class Game {
     parser = new Parser();
   }
 
+  //parsing new dat files that contain data about items, characters, and rooms that are a part of the second stage of the game
+  private void stageTwo(){
+    try {
+      initRooms("data/roomsTwo.dat");
+      currentRoom = masterRoomMap.get("CRASH_SITE");
+      initItems("data/itemsTwo.dat");
+      initCharacters("data/charactersTwo.dat");
+      playStageTwo();
+
+    } catch (Exception e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    parser = new Parser();
+  }
   /**
    * Main play routine. Loops until end of play.
    */
@@ -217,8 +233,21 @@ public class Game {
       finished = processCommand(command);
     }
     System.out.println("Thank you for playing.  Good bye.");
+    in.close();
   }
 
+  //begin to take commands from new map 
+  public void playStageTwo() {
+    System.out.println(currentRoom.longDescription());
+    // Enter the main command loop. Here we repeatedly read commands and
+    // execute them until the game is over.
+    boolean finished = false;
+    while (!finished) {
+      Command command = parser.getCommand();
+      finished = processCommand(command);
+    }
+    System.out.println("Thank you for playing.  Good bye.");
+  }
   /**
    * Print out the opening message for the player.
    */
@@ -316,17 +345,65 @@ public class Game {
     if (!currentRoom.getRoomName().equalsIgnoreCase(thirdWord)) //if you are trying to proceed from a room you are not in currently
       System.out.println("You can't proceed from a room your not currently in!");
     else{
-      if (thirdWord.equalsIgnoreCase("hangar") && inventory.inInventory("mealKit") && inventory.inInventory("blaster") && inventory.inInventory("medKit") && inventory.inInventory("tarp"))
-        System.out.println("yayayay");
-      else
+      //in order to proceed from first part of game, you have to be in the hangar and have the following items:
+      if (thirdWord.equalsIgnoreCase("hangar") && inventory.inInventory("mealKit") && inventory.inInventory("blaster") && inventory.inInventory("medKit") && inventory.inInventory("tarp")){
+        spaceFight();
+        stageTwo();
+        
+      }else
         System.out.println("You haven't found all your items in the ship to proceed yet!");
     }
+  }
+
+  private void spaceFight() {
+    //creating hashmaps full of command option
+    HashMap<String, String> spaceFightPart1Choices = new HashMap<String, String>(); 
+    spaceFightPart1Choices.put("go north", "The enemies have surrounded you! There's nowhere to go!");
+    spaceFightPart1Choices.put("go south", "The enemies have surrounded you! There's nowhere to go!");
+    spaceFightPart1Choices.put("go east", "The enemies have surrounded you! There's nowhere to go!");
+    spaceFightPart1Choices.put("go west", "The enemies have surrounded you! There's nowhere to go!");
+    spaceFightPart1Choices.put("request backup", "There's no time to request backup!");
+    spaceFightPart1Choices.put("fire", "Nice! You destroyed some of their ships");
+
+    HashMap<String, String> spaceFightPart2Choices = new HashMap<String, String>(); 
+    spaceFightPart2Choices.put("go north", "Good job! Dodging the bullets allowed both enemy ships to blow themselves up in the cross fire!");
+    spaceFightPart2Choices.put("go south", "Good job! Dodging the bullets allowed both enemy ships to blow themselves up in the cross fire!");
+    spaceFightPart2Choices.put("go east", "You got shot and died! The end!");
+    spaceFightPart2Choices.put("go west", "You got shot and died! The end!");
+    spaceFightPart2Choices.put("request backup", "There's no time to request backup!");
+    spaceFightPart2Choices.put("fire", "You got shot and died! The end!");
+
+    System.out.println("You are on your flight patrol but the enemy fleet start attacking you. What do you do?");
+    
+    //get answer from user
+    String answerOne = in.nextLine().toLowerCase();
+    String responseOne = spaceFightPart1Choices.get(answerOne); 
+    int wrongAnswersOne = 0;
+    
+    while (wrongAnswersOne < 3)
+    if (responseOne != null){ //if the answer the user inputs is one of the keys in the hashMap
+      if (answerOne != "fire"){ //if the answer the user inputs is not the correct answer
+        System.out.println(responseOne);
+        wrongAnswersOne++;
+      }else{
+        System.out.println(responseOne);
+        System.out.println("Oh no! Enemy ships are shooting from east and west! What do you do?");
+      }
+
+    }else{ //if the answer the user inputs is not one of the keys in the hashMap
+      System.out.println("I don't know what you mean");
+      wrongAnswersOne++;
+    }
+
+    if (wrongAnswersOne >= 3)
+      System.out.println("You're out of time. The enemy fleet destroyed your ship and you died. The End");
+
   }
 
   private void conversation(String thirdWord) {
     
     //check if character we want to talk to is in this room by first accessing the room that we are currently in through the masterRoomMap, then getting all the characters in that room, then checking if the person we want to talk to is one of those chracters
-    GameCharacter speakingCharacter = masterRoomMap.get(currentRoom.getRoomName().toUpperCase()).getCharacters().contains(thirdWord);
+    GameCharacter speakingCharacter = masterRoomMap.get(currentRoom.getRoomName().toUpperCase().replaceAll(" ", "_")).getCharacters().contains(thirdWord);
     
     if (speakingCharacter != null){ //character we want to talk to is in room
       System.out.println(speakingCharacter.getInitialText()); //print out the conversation's initial dialogue
@@ -358,11 +435,13 @@ public class Game {
       Inventory temp = currentRoom.getInventory(); //room inventory
       Item item = temp.removeItem(itemName);//this is the item the player picks up from the room. Item can have a value of null (if it is null then that means that the item they command to take is not in the room inventory)
       boolean isInInventory = false;
+      boolean noSpace = false;
 
       if (item != null){ //if the player picks up an item that is in the room inventory 
         if (inventory.getTotalWeight() + item.getWeight() > 10){
           System.out.println("You don't have enough space in your inventory! Remove some items to be able to add this one.");
           temp.addItem(item);
+          noSpace = true;
         }else{
           if (inventory.addItem(item)) //adding item that was in room inventory to player's inventory
             System.out.println("You have taken the " + itemName);
@@ -376,17 +455,23 @@ public class Game {
           if (temp != null){ //if the item in the inventory we are currently focusing on can hold other items
             item = temp.removeItem(itemName);
             if (item != null){
-              if (inventory.addItem(item)){ //adding item that was in the item that can hold other item's inventory to player's inventory
-                System.out.println("You have taken the " + itemName);
-                isInInventory = true;
-              }else //some items cannot be picked up.
-                System.out.println("You were unable to take the " + itemName); 
+              if (inventory.getTotalWeight() + item.getWeight() > 10){
+                System.out.println("You don't have enough space in your inventory! Remove some items to be able to add this one.");
+                temp.addItem(item);
+                noSpace = true;
+              }else{
+                if (inventory.addItem(item)){ //adding item that was in the item that can hold other item's inventory to player's inventory
+                  System.out.println("You have taken the " + itemName);
+                  isInInventory = true;
+                }else //some items cannot be picked up.
+                  System.out.println("You were unable to take the " + itemName); 
+              }
             }
           
           }
         }
 
-        if (!isInInventory) //if requested item is not in room or in any of the items that can store other items
+        if (!isInInventory && !noSpace) //if requested item is not in room or in any of the items that can store other items
           System.out.println("The item " + itemName + " isn't here."); 
       }
   }

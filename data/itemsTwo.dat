@@ -1,0 +1,17 @@
+Item Name: bag
+Item Description: A plastic bag
+Openable: true
+Weight: 1
+Room: SHIP
+Item Name: torch
+Item Description: Brings light to a room
+Openable: false
+Weight: 1
+Item: BAG
+Item Name: rope
+Item Description: used to climb up/down high places
+Openable: false
+Weight: 2
+Room: CRASH_SITE
+
+
