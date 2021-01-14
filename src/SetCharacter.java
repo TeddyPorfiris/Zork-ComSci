@@ -1,10 +1,10 @@
 import java.util.ArrayList;
 
 
-public class CharacterAdd {
+public class SetCharacter {
     private ArrayList<GameCharacter> characters;
     
-    public CharacterAdd(){
+    public SetCharacter(){
         characters = new ArrayList<GameCharacter>();
     }
 

@@ -6,6 +6,8 @@ public class Item {
 	private Inventory items;
 	private boolean isOpenable;
 	private int weight;
+	private boolean pickUpable;
+	private int nutrition;
 	
 	
 	public Item() {
@@ -36,8 +38,17 @@ public class Item {
 		this.weight = weight;
 	}
 
+	public void setPickUpable(boolean pickUpable){
+		this.pickUpable = pickUpable;
+	}
 
-	public Item(String name, String description, boolean isOpenable, int weight) {
+	//how much health one gets when eating a certain animal
+	public void setNutrition(int nutrition){
+		this.nutrition = nutrition;
+	}
+
+
+	public Item(String name, String description, boolean isOpenable, int weight, boolean pickUpable, int nutrition) {
 		super();
 		this.name = name;
 		this.description = description;
@@ -45,14 +56,18 @@ public class Item {
 		if(isOpenable)
 			this.items = new Inventory(); 
 		this.weight = weight;
+		this.pickUpable = pickUpable;
+		this.nutrition = nutrition;
 	}
 	
-	public Item(String name, String description, int weight) {
+	public Item(String name, String description, int weight, boolean pickUpable, int nutrition) {
 		super();
 		this.name = name;
 		this.description = description;
 		this.isOpenable = false;
 		this.weight = weight;
+		this.pickUpable = pickUpable;
+		this.nutrition = nutrition;
 	}
 
 	public String getName() {
@@ -84,6 +99,14 @@ public class Item {
             return null;
 		return items.removeItem(item);
 	}
+
+	public boolean pickUpable(){
+		return pickUpable;
+	}
+
+	public int getNutrition() {
+        return nutrition;
+    }
 	
 	public String displayContents() {
         if (!isOpenable) 

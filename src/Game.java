@@ -27,6 +27,7 @@ public class Game {
   private Room currentRoom; //each room has an inventory
   private Inventory inventory; //player's inventory 
   private Scanner in = new Scanner(System.in);
+  private int hunger = 0;
 
   // This is a MASTER object that contains all of the rooms and is easily
   // accessible.
@@ -57,8 +58,14 @@ public class Game {
 				Boolean openable = Boolean.valueOf(itemScanner.nextLine().split(":")[1].trim()); //gets boolean value if item is openable or not in items dat file 
         item.setOpenable(openable); //sets if the new item object we created above is openable
 
-        int weight = Integer.parseInt(itemScanner.nextLine().split(":")[1].trim()); //gets item description by parsing items dat file 
+        int weight = Integer.parseInt(itemScanner.nextLine().split(":")[1].trim()); //gets item weight by parsing items dat file 
         item.setWeight(weight); //sets the weight of this new item object that we created to what we defined above
+
+        boolean pickUpable = Boolean.valueOf(itemScanner.nextLine().split(":")[1].trim()); //checks if item can be picked up by parsing items dat file 
+        item.setPickUpable(pickUpable); //sets if this new item object that we created to what we defined above can be picked
+
+        int nutrition = Integer.parseInt(itemScanner.nextLine().split(":")[1].trim()); //gets item nutritional value by parsing items dat file 
+        item.setNutrition(nutrition); //sets the nutritional value of this new item object that we created to what we defined above
 
         masterItemMap.put(itemName.toUpperCase().replaceAll(" ", "_"), item); //hashmap of all items
         //System.out.println(masterItemMap);
@@ -182,6 +189,8 @@ public class Game {
     }
   }
 
+
+
   /**
    * Create the game and initialise its internal map.
    */
@@ -210,6 +219,7 @@ public class Game {
     try {
       initRooms("data/roomsTwo.dat");
       currentRoom = masterRoomMap.get("CRASH_SITE");
+      inventory = new Inventory();
       initItems("data/itemsTwo.dat");
       initCharacters("data/charactersTwo.dat");
       return playStageTwo();
@@ -237,6 +247,7 @@ public class Game {
 
   //begin to take commands from new map 
   public boolean playStageTwo() {
+    planetFirstDayDescription();
     System.out.println(currentRoom.longDescription());
     // Enter the main command loop. Here we repeatedly read commands and
     // execute them until the game is over.
@@ -266,6 +277,13 @@ public class Game {
     System.out.println(currentRoom.longDescription());
   }
 
+  private void planetFirstDayDescription(){
+    System.out.println("DAY 1");
+    System.out.println("You wake up inside your broken ship. You are on an unknown planet. DESCRIBE THE PLANET (MENTION HOW YOUR DEVICE SAYS THAT THE PLANET IS UNINHABATED BUT YOU WONDER HOW IT HAS SUCH SIMILAR LIVING CONDITIONS TO EARTH). You don’t know what to do next.");
+    System.out.println("Besides the equipment you gathered at the station, in your space jet, you also have climbing gear and a torch. However, you noticed as you were crashing that your food pack and tarp flew out of a broken window. It seems to be midday.");
+    System.out.println("You need to set up a base before 10:00pm that has a fire and a roof. You also need to collect all the items that you previously packed because they fell out of your inventory in the crash. Drop off all items at the crash site to set up your base");
+  }
+
   /**
    * Given a command, process (that is: execute) the command. If this command ends
    * the game, true is returned, otherwise false is returned.
@@ -280,9 +298,10 @@ public class Game {
     String commandWord = command.getCommandWord();
     if (commandWord.equals("help"))
       printHelp();
-    else if (commandWord.equals("go"))
+    else if (commandWord.equals("go")){
+      hunger++;
       goRoom(command);
-    else if (commandWord.equals("quit")) {
+    }else if (commandWord.equals("quit")) {
       if (command.hasSecondWord())
         System.out.println("Quit what?");
       else
@@ -303,7 +322,7 @@ public class Game {
     else
       dropItem(command.getSecondWord());
     }else if (commandWord.equals("i")){
-      System.out.println("You are carrying the following: " + inventory + "\nInventory weight: " + inventory.getTotalWeight());
+      System.out.println("You are carrying the following:\n" + inventory + "\nInventory weight: " + inventory.getTotalWeight() + "\n");
     }else if (commandWord.equals("open")){
       if (!command.hasSecondWord())
         System.out.println("Open what?");
@@ -340,17 +359,14 @@ public class Game {
     else
     System.out.println("You don't have that item in your inventory.");
   }
-
+  
   private boolean proceed(String thirdWord) {
-    if (!currentRoom.getRoomName().equalsIgnoreCase(thirdWord)) //if you are trying to proceed from a room you are not in currently
-      System.out.println("You can't proceed from a room your not currently in!");
-    else{
-      //in order to proceed from first part of game, you have to be in the hangar and have the following items:
-      if (thirdWord.equalsIgnoreCase("hangar") && inventory.inInventory("mealKit") && inventory.inInventory("blaster") && inventory.inInventory("medKit") && inventory.inInventory("tarp")){
-        return spaceFight();
-      }else
-        System.out.println("You haven't found all your items in the ship to proceed yet!");
-    }
+    //in order to proceed from first part of game, you have to be in the hangar and have the following items:
+    if (thirdWord.equalsIgnoreCase("hangar") && inventory.inInventory("mealKit") && inventory.inInventory("blaster") && inventory.inInventory("medKit") && inventory.inInventory("tarp")){
+      return spaceFight();
+    }else
+      System.out.println("You can't proceed just yet!");
+    
     return false;
   }
 
@@ -362,11 +378,11 @@ public class Game {
     spaceFightPart1Choices.put("go east", "The enemies have surrounded you! There's nowhere to go!");
     spaceFightPart1Choices.put("go west", "The enemies have surrounded you! There's nowhere to go!");
     spaceFightPart1Choices.put("request backup", "There's no time to request backup!");
-    spaceFightPart1Choices.put("fire", "Nice! You destroyed some of their ships");
+    spaceFightPart1Choices.put("fire", "\nNice! You destroyed some of their ships\n");
 
     HashMap<String, String> spaceFightPart2Choices = new HashMap<String, String>(); 
-    spaceFightPart2Choices.put("go north", "Good job! Dodging the bullets allowed both enemy ships to blow themselves up in the cross fire!");
-    spaceFightPart2Choices.put("go south", "Good job! Dodging the bullets allowed both enemy ships to blow themselves up in the cross fire!");
+    spaceFightPart2Choices.put("go north", "\nGood job! Dodging the bullets allowed both enemy ships to blow themselves up in the cross fire!\n");
+    spaceFightPart2Choices.put("go south", "\nGood job! Dodging the bullets allowed both enemy ships to blow themselves up in the cross fire!\n");
     spaceFightPart2Choices.put("go east", "You can't go east! You'll run into the bullets!");
     spaceFightPart2Choices.put("go west", "You can't go west! You'll run into the bullets!");
     spaceFightPart2Choices.put("request backup", "There's no time to request backup!");
@@ -379,7 +395,7 @@ public class Game {
     spaceFightPart3Choices.put("go west", "The enemies have surrounded you! There's nowhere to go!");
     spaceFightPart3Choices.put("request backup", "There's no time to request backup!");
     spaceFightPart3Choices.put("fire", "You don't have enough fire power to take out the whole enemy fleet!");
-    spaceFightPart3Choices.put("use self-destruct button", "You escape the enemies while blowing them up but you and parts of your ship crashland on an unknown planet.");
+    spaceFightPart3Choices.put("use self-destruct button", "\nYou escape the enemies while blowing them up but you and parts of your ship crashland on an unknown planet.\n");
 
 
     
@@ -404,8 +420,6 @@ public class Game {
 
     for (int i=0; i<3; i++){ //the user has three tries to get the right answer.
       String answer = in.nextLine().toLowerCase();
-      if (answer.equalsIgnoreCase("help"))
-        printHelp();
       String response = spaceFightChoices.get(answer);
       if (response != null){ //if the answer the user inputs is one of the keys in the hashMap
         if (!answer.equals(correctAnswer1) && !answer.equals(correctAnswer2)){//if the answer the user inputs is not the correct answer
@@ -416,7 +430,13 @@ public class Game {
           break; //break from loop if correct answer is given (we don't have to continue prompting for answers if correct answer is given)
         }
       }else{ //if the answer the user inputs is not one of the keys in the hashMap
-        System.out.println("That's not the best thing to do right now!");
+        if (answer.equalsIgnoreCase("help")){
+          printHelp();
+          System.out.println();
+          i--;
+        }
+        else
+          System.out.println("That's not the best thing to do right now!");
       }
     }
     if (isCorrect)
@@ -467,17 +487,20 @@ public class Game {
       boolean isInInventory = false;
       boolean noSpace = false;
 
-      if (item != null){ //if the player picks up an item that is in the room inventory 
-        if (inventory.getTotalWeight() + item.getWeight() > 10){
-          System.out.println("You don't have enough space in your inventory! Remove some items to be able to add this one.");
-          temp.addItem(item);
-          noSpace = true;
-        }else{
-          if (inventory.addItem(item)) //adding item that was in room inventory to player's inventory
-            System.out.println("You have taken the " + itemName);
-          else //some items cannot be picked up.
-            System.out.println("You were unable to take the " + itemName); 
-        }
+      if (item != null){ //if the player picks up an item that is in the room inventory
+        if (item.pickUpable()){ 
+          if (inventory.getTotalWeight() + item.getWeight() > 10){
+            System.out.println("You don't have enough space in your inventory! Remove some items to be able to add this one.");
+            temp.addItem(item);
+            noSpace = true;
+          }else{
+            if (inventory.addItem(item)) //adding item that was in room inventory to player's inventory
+              System.out.println("You have taken the " + itemName);
+            else //some items cannot be picked up.
+              System.out.println("You were unable to take the " + itemName); 
+          }
+        }else
+          System.out.println("You cannot pick up this item.");
       }
       else{ //if the player commands to pick up an item that is not in the room inventory 
         for (int i=0; i<inventory.getInventory().size(); i++){ //go through the player's inventory to see if requested item is within any items that can contain other items
@@ -556,6 +579,10 @@ public class Game {
     else {
       currentRoom = nextRoom;
       System.out.println(currentRoom.longDescription());
+      if (currentRoom.getRoomName().equalsIgnoreCase("hangar") || currentRoom.getRoomName().equalsIgnoreCase("dorm") || currentRoom.getRoomName().equalsIgnoreCase("cafeteria") || currentRoom.getRoomName().equalsIgnoreCase("storage") || currentRoom.getRoomName().equalsIgnoreCase("navigation") || currentRoom.getRoomName().equalsIgnoreCase("weapons") || currentRoom.getRoomName().equalsIgnoreCase("washroom"))
+        hunger = 0;
+      else  
+        System.out.println(hunger + "/15");
     }
   }
 }

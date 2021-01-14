@@ -28,7 +28,7 @@ public class Room {
   private HashMap<String, Room> exits; // stores exits of this room.
   private Inventory inventory;
   //private HashMap<String, GameCharacter> characters; //characters in room 
-  private CharacterAdd characters;
+  private SetCharacter characters;
 
   /**
    * Create a room described "description". Initially, it has no exits.
@@ -38,7 +38,7 @@ public class Room {
     this.description = description;
     exits = new HashMap<String, Room>();
     inventory = new Inventory();
-    characters = new CharacterAdd();
+    characters = new SetCharacter();
   }
 
   public Room() {
@@ -47,14 +47,14 @@ public class Room {
     description = "DEFAULT DESCRIPTION";
     exits = new HashMap<String, Room>();
     inventory = new Inventory();
-    characters = new CharacterAdd();
+    characters = new SetCharacter();
   }
 
   public Inventory getInventory(){
     return inventory;
   }
 
-  public CharacterAdd getCharacters(){
+  public SetCharacter getCharacters(){
     return characters;
   }
 
@@ -114,7 +114,7 @@ public class Room {
    * constructor).
    */
   public String shortDescription() {
-    return "Room: " + roomName + "\n\n" + description;
+    return "Location: " + roomName + "\n\n" + description;
   }
 
   /**
@@ -122,7 +122,7 @@ public class Room {
    * Exits: north west
    */
   public String longDescription() {
-    return "Room: " + roomName + "\n\n" + description + "\n" + exitString() + "\nThe room contains the following items: \n" + inventory + "\nThe room contains the following people: \n" + characters;
+    return "\nLocation: " + roomName + "\n\n" + description + "\n" + exitString() + "\nThis location contains the following items/creatures: \n" + inventory + "\nThis location contains the following people: \n" + characters;
   }
 
   /**
