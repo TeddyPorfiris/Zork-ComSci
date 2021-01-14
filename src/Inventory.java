@@ -62,7 +62,7 @@ public class Inventory {
     public String toString(){
 
         if (items.size() == 0)
-            return "No items.";
+            return "No items.\n";
 
         String msg = "";
         for (Item i : items){

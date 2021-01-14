@@ -29,6 +29,7 @@ public class Room {
   private Inventory inventory;
   //private HashMap<String, GameCharacter> characters; //characters in room 
   private SetCharacter characters;
+  private SetAnimal animals;
 
   /**
    * Create a room described "description". Initially, it has no exits.
@@ -39,6 +40,7 @@ public class Room {
     exits = new HashMap<String, Room>();
     inventory = new Inventory();
     characters = new SetCharacter();
+    animals = new SetAnimal();
   }
 
   public Room() {
@@ -48,6 +50,7 @@ public class Room {
     exits = new HashMap<String, Room>();
     inventory = new Inventory();
     characters = new SetCharacter();
+    animals = new SetAnimal();
   }
 
   public Inventory getInventory(){
@@ -58,8 +61,8 @@ public class Room {
     return characters;
   }
 
-  public void setCharacters(){
-
+  public SetAnimal getAnimals(){
+    return animals;
   }
 
   public void setExit(char direction, Room r) throws Exception {
@@ -122,7 +125,11 @@ public class Room {
    * Exits: north west
    */
   public String longDescription() {
-    return "\nLocation: " + roomName + "\n\n" + description + "\n" + exitString() + "\nThis location contains the following items/creatures: \n" + inventory + "\nThis location contains the following people: \n" + characters;
+    return "\nLocation: " + roomName + "\n\n" + description + "\n" + exitString() + "\nThis location contains the following items: \n" + inventory + "\nThis location contains the following people: \n" + characters;
+  }
+
+  public String longDescriptionPlanet() {
+    return "\nLocation: " + roomName + "\n\n" + description + "\n" + exitString() + "\nThis location contains the following items: \n" + inventory + "\nThis location contains the following people: \n" + characters + "\nThis location contains the following animals: \n" + animals;
   }
 
   /**

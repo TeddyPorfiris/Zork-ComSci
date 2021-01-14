@@ -1,0 +1,5 @@
+Animal Name: rabbit
+Animal Description: A stray rabbit that can be eaten when killed.
+Dead: false
+Nutrition: 3
+Room: CRASH_SITE

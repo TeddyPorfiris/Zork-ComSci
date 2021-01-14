@@ -8,6 +8,7 @@ public class Item {
 	private int weight;
 	private boolean pickUpable;
 	private int nutrition;
+	private boolean isDead;
 	
 	
 	public Item() {
@@ -47,8 +48,12 @@ public class Item {
 		this.nutrition = nutrition;
 	}
 
+	public void setIsDead(boolean isDead){
+		this.isDead = isDead;
+	}
 
-	public Item(String name, String description, boolean isOpenable, int weight, boolean pickUpable, int nutrition) {
+
+	public Item(String name, String description, boolean isOpenable, int weight, boolean pickUpable, int nutrition, boolean isDead) {
 		super();
 		this.name = name;
 		this.description = description;
@@ -58,9 +63,10 @@ public class Item {
 		this.weight = weight;
 		this.pickUpable = pickUpable;
 		this.nutrition = nutrition;
+		this.isDead = isDead;
 	}
 	
-	public Item(String name, String description, int weight, boolean pickUpable, int nutrition) {
+	public Item(String name, String description, int weight, boolean pickUpable, int nutrition, boolean isDead) {
 		super();
 		this.name = name;
 		this.description = description;
@@ -68,6 +74,7 @@ public class Item {
 		this.weight = weight;
 		this.pickUpable = pickUpable;
 		this.nutrition = nutrition;
+		this.isDead = isDead;
 	}
 
 	public String getName() {
@@ -106,7 +113,12 @@ public class Item {
 
 	public int getNutrition() {
         return nutrition;
-    }
+	}
+	
+	public boolean isDead(){
+		return isDead;
+	}
+	
 	
 	public String displayContents() {
         if (!isOpenable) 

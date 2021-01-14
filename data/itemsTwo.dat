@@ -3,71 +3,62 @@ Item Description: A powerful laser gun. Can be used to shoot enemies, blast down
 Openable: false
 Weight: 2
 Pick Up: true
-Nutrition: null
 Room: COCKPIT
 Item Name: medKit
 Item Description: A small box with equipment to be used to heal yourself when ill/injured.
 Openable: false
 Weight: 2
 Pick Up: true
-Nutrition: null
 Room: STORAGE_SPACE
 Item Name: torch
 Item Description: A flashlight that produces a great beam of light.
 Openable: false
 Weight: 1
 Pick Up: true
-Nutrition: null
 Room: STORAGE_SPACE
 Item Name: tarp
 Item Description: A wide plastic blanket that can provide shelter by covering up spaces.
 Openable: false
 Weight: 1
 Pick Up: true
-Nutrition: null
 Room: MOUNTAINOUS_PATH
-Item Name: mealKit
-Item Description: A packaged meal containing food and drink.
+Item Name: waterJug
+Item Description: A large, portable jug of water.
 Openable: false
 Weight: 1
 Pick Up: true
-Nutrition: null
 Room: RIVER
 Item Name: suspiciousCode
 Item Description: A mysterious piece of paper on the bank of the river. It has a string of numbers written on it.
 Openable: false
 Weight: 1
 Pick Up: true
-Nutrition: null
 Room: RIVER
 Item Name: rocks
 Item Description: A collection of small rocks. Can be used for throwing, creating sparks, sharpening blades, among other things.
 Openable: false
 Weight: 2
 Pick Up: true
-Nutrition: null
 Room: MOUNTAIN_RIDGE
 Item Name: wood
 Item Description: A collection of pieces of wooden logs and planks. Can be used for fuel for a fire, crafting weapons/equipment, among other things.
 Openable: false
 Weight: 1
 Pick Up: true 
-Nutrition: null
 Room: FOREST
 Item Name: boulders
 Item Description: A piece of giant rock.
 Openable: false
 Weight: 5
 Pick Up: false 
-Nutrition: null
 Room: CLUSTER_OF_BOULDERS
 
-Item Name: rabbit
-Item Description: A stray rabbit.
-Openable: false
-Weight: 2
-Pick Up: true 
-Nutrition: 3
-Room: CRASH_SITE
+
+
+
+
+
+
+
 
 

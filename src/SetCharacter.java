@@ -29,7 +29,7 @@ public class SetCharacter {
     public String toString(){
 
         if (characters.size() == 0)
-            return "No one is in this room.";
+            return "No one is in this room.\n";
 
         String msg = "";
         for (GameCharacter i : characters){

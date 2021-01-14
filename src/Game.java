@@ -38,6 +38,7 @@ public class Game {
   // Room (assuming you have one).
   private HashMap<String, Room> masterRoomMap;
   private HashMap<String, Item> masterItemMap;
+  private HashMap<String, Animal> masterAnimalMap;
   private HashMap<String, GameCharacter> masterCharacterMap;
 
 	private void initItems(String fileName) throws Exception{
@@ -58,14 +59,11 @@ public class Game {
 				Boolean openable = Boolean.valueOf(itemScanner.nextLine().split(":")[1].trim()); //gets boolean value if item is openable or not in items dat file 
         item.setOpenable(openable); //sets if the new item object we created above is openable
 
-        int weight = Integer.parseInt(itemScanner.nextLine().split(":")[1].trim()); //gets item weight by parsing items dat file 
+        int weight = Integer.parseInt(itemScanner.nextLine().split(":")[1].trim()); //gets item description by parsing items dat file 
         item.setWeight(weight); //sets the weight of this new item object that we created to what we defined above
 
-        boolean pickUpable = Boolean.valueOf(itemScanner.nextLine().split(":")[1].trim()); //checks if item can be picked up by parsing items dat file 
+        boolean pickUpable = Boolean.valueOf(itemScanner.nextLine().split(":")[1].trim()); //gets item description by parsing items dat file 
         item.setPickUpable(pickUpable); //sets if this new item object that we created to what we defined above can be picked
-
-        int nutrition = Integer.parseInt(itemScanner.nextLine().split(":")[1].trim()); //gets item nutritional value by parsing items dat file 
-        item.setNutrition(nutrition); //sets the nutritional value of this new item object that we created to what we defined above
 
         masterItemMap.put(itemName.toUpperCase().replaceAll(" ", "_"), item); //hashmap of all items
         //System.out.println(masterItemMap);
@@ -88,6 +86,50 @@ public class Game {
 		}
 	}
 
+
+  
+  private void initAnimals(String fileName) throws Exception{
+		Scanner animalScanner;
+    masterAnimalMap = new HashMap<String, Animal>();
+    
+		try {
+			
+			animalScanner = new Scanner(new File(fileName));
+			while (animalScanner.hasNext()) {
+        Animal animal = new Animal(); //creates new animal object
+        
+				String animalName = animalScanner.nextLine().split(":")[1].trim(); //gets animal name by parsing items dat file 
+				animal.setName(animalName); //sets the name of this new animal object that we created to what we defined above
+      
+        String animalDesc = animalScanner.nextLine().split(":")[1].trim(); //gets animal description by parsing items dat file 
+        animal.setDescription(animalDesc); //sets the description of this new animal object that we created to what we defined above
+
+        boolean isDead = Boolean.valueOf(animalScanner.nextLine().split(":")[1].trim()); //checks if animal is dead by parsing items dat file 
+        animal.setIsDead(isDead); //sets if this new animal object that we created to what we defined above is dead or not
+
+        int nutrition = Integer.parseInt(animalScanner.nextLine().split(":")[1].trim()); //gets animal nutritional value by parsing items dat file 
+        animal.setNutrition(nutrition); //sets the nutritional value of this new animal object that we created to what we defined above
+
+
+        masterAnimalMap.put(animalName.toUpperCase().replaceAll(" ", "_"), animal); //hashmap of all animals
+
+
+				
+				String temp = animalScanner.nextLine(); 
+        String name = temp.split(":")[1].trim(); 
+        
+        if (name.equals("RANDOM")){  //if the name of the room is RANDOM (i.e. we want to initialize the item to a random room)
+          int randomRoomIndex = (int)(Math.random() * masterRoomMap.size()); //generate random index of the hashmap that contains all the rooms
+          ArrayList<String> roomKeys = new ArrayList<String>(masterRoomMap.keySet()); //turn hashmap into ArrayList format
+          masterRoomMap.get(roomKeys.get(randomRoomIndex)).getAnimals().addAnimal(animal); //get a random room by taking a room name from this arrayList at the random index and then adding an animal to it
+        }else 
+          masterRoomMap.get(name).getAnimals().addAnimal(animal); //adding animal to respective room (name is the name of the room)
+
+			}
+		}catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
 
 	private void initCharacters(String fileName) throws Exception{
 		Scanner characterScanner;
@@ -222,6 +264,7 @@ public class Game {
       inventory = new Inventory();
       initItems("data/itemsTwo.dat");
       initCharacters("data/charactersTwo.dat");
+      initAnimals("data/animals.dat");
       return playStageTwo();
 
     } catch (Exception e) {
@@ -248,7 +291,8 @@ public class Game {
   //begin to take commands from new map 
   public boolean playStageTwo() {
     planetFirstDayDescription();
-    System.out.println(currentRoom.longDescription());
+    System.out.println(currentRoom.longDescriptionPlanet());
+    System.out.println("\nHunger level: 0/15");
     // Enter the main command loop. Here we repeatedly read commands and
     // execute them until the game is over.
     boolean finished = false;
@@ -272,7 +316,7 @@ public class Game {
     System.out.println();
     System.out.println("You are aboard a space station located on the outer rims of the Milky Ray.");
     System.out.println("You have just woken up, and you are currently gathering some equipment from around the ship to take with you before you take your fighter jet and go on your assigned scouting mission.");
-    System.out.println("Your task: Walk around the ship and collect the following items: Meal pack, laser gun, medical kit, tarp. Return to the hangar once these items are collected.");
+    System.out.println("Your task: Walk around the ship and collect the following items: water jug, laser gun, medical kit, tarp. Return to the hangar once these items are collected.");
     System.out.println();
     System.out.println(currentRoom.longDescription());
   }
@@ -280,7 +324,7 @@ public class Game {
   private void planetFirstDayDescription(){
     System.out.println("DAY 1");
     System.out.println("You wake up inside your broken ship. You are on an unknown planet. DESCRIBE THE PLANET (MENTION HOW YOUR DEVICE SAYS THAT THE PLANET IS UNINHABATED BUT YOU WONDER HOW IT HAS SUCH SIMILAR LIVING CONDITIONS TO EARTH). You don’t know what to do next.");
-    System.out.println("Besides the equipment you gathered at the station, in your space jet, you also have climbing gear and a torch. However, you noticed as you were crashing that your food pack and tarp flew out of a broken window. It seems to be midday.");
+    System.out.println("Besides the equipment you gathered at the station, in your space jet, you also have climbing gear and a torch. However, you noticed as you were crashing that your water jug and tarp flew out of a broken window. It seems to be midday.");
     System.out.println("You need to set up a base before 10:00pm that has a fire and a roof. You also need to collect all the items that you previously packed because they fell out of your inventory in the crash. Drop off all items at the crash site to set up your base");
   }
 
@@ -306,8 +350,6 @@ public class Game {
         System.out.println("Quit what?");
       else
         return true; // signal that we want to quit
-    } else if (commandWord.equals("eat")) {
-      System.out.println("Do you really think you should be eating at a time like this?");
     }else if (commandWord.equals("jump")){
       System.out.println("jump up and down");
 
@@ -343,14 +385,55 @@ public class Game {
         System.out.println("Weigh what?");
       else
         itemWeight(command.getSecondWord());
+    }else if (commandWord.equals("fire")){
+      if (!command.hasSecondWord() || !command.hasThirdWord())
+        System.out.println("Fire at what?");
+      else
+        fire(command.getThirdWord());
+    }else if (commandWord.equals("eat")) {
+      if (!command.hasSecondWord())
+        System.out.println("eat what?");
+      else
+        eat(command.getSecondWord());
     }
-
-
 
     return false;
   }
 
 
+
+  private void eat(String secondWord) {
+    if (currentRoom.getAnimals().contains(secondWord) != null){ //if the room player is currently in contains the animal they want to eat
+        Animal deadAnimal = currentRoom.getAnimals().contains(secondWord); //the dead animal
+        if (deadAnimal.isDead()){ //if the animal we want to eat is dead
+          System.out.println("Yummy!");
+
+          //reduce hunger based off of the nutrition the animal we just ate provides
+          if (hunger < deadAnimal.getNutrition())
+            hunger = 0;
+          else
+            hunger -= deadAnimal.getNutrition();
+
+            System.out.println("Hunger lever: " + hunger + "/15");
+          //remove the animal we just ate from the room
+          currentRoom.getAnimals().removeAnimal(deadAnimal); 
+
+        }else //if animal we want to eat is not dead
+          System.out.println("You are trying to eat a live animal! Kill it first with your blaster.");
+
+    }else
+      System.out.println("You are trying to eat something that isn't there!");
+  }
+
+  private void fire(String thirdWord) {
+    if (currentRoom.getAnimals().contains(thirdWord) != null){ //if animal we are firing at is in room
+      Animal deadAnimal = currentRoom.getAnimals().contains(thirdWord); //get animal we want to fire at
+      deadAnimal.setIsDead(true); //set that the animal is dead to true
+      System.out.println("The " + thirdWord + " has been shot and killed.");
+
+    }else //if animal we are firing at is not in room
+      System.out.println("You are firing at something that isn't there!");
+  }
 
   private void itemWeight(String secondWord) {
     Item item = inventory.contains(secondWord);
@@ -362,7 +445,7 @@ public class Game {
   
   private boolean proceed(String thirdWord) {
     //in order to proceed from first part of game, you have to be in the hangar and have the following items:
-    if (thirdWord.equalsIgnoreCase("hangar") && inventory.inInventory("mealKit") && inventory.inInventory("blaster") && inventory.inInventory("medKit") && inventory.inInventory("tarp")){
+    if (thirdWord.equalsIgnoreCase("hangar") && inventory.inInventory("waterJug") && inventory.inInventory("blaster") && inventory.inInventory("medKit") && inventory.inInventory("tarp")){
       return spaceFight();
     }else
       System.out.println("You can't proceed just yet!");
@@ -578,11 +661,13 @@ public class Game {
       System.out.println("There is no door!");
     else {
       currentRoom = nextRoom;
-      System.out.println(currentRoom.longDescription());
-      if (currentRoom.getRoomName().equalsIgnoreCase("hangar") || currentRoom.getRoomName().equalsIgnoreCase("dorm") || currentRoom.getRoomName().equalsIgnoreCase("cafeteria") || currentRoom.getRoomName().equalsIgnoreCase("storage") || currentRoom.getRoomName().equalsIgnoreCase("navigation") || currentRoom.getRoomName().equalsIgnoreCase("weapons") || currentRoom.getRoomName().equalsIgnoreCase("washroom"))
+      if (currentRoom.getRoomName().equalsIgnoreCase("hangar") || currentRoom.getRoomName().equalsIgnoreCase("dorm") || currentRoom.getRoomName().equalsIgnoreCase("cafeteria") || currentRoom.getRoomName().equalsIgnoreCase("storage") || currentRoom.getRoomName().equalsIgnoreCase("navigation") || currentRoom.getRoomName().equalsIgnoreCase("weapons") || currentRoom.getRoomName().equalsIgnoreCase("washroom")){
         hunger = 0;
-      else  
-        System.out.println(hunger + "/15");
+        System.out.println(currentRoom.longDescription());
+      }else{  
+        System.out.println(currentRoom.longDescriptionPlanet());
+        System.out.println("Hunger level: " + hunger + "/15");
+      }
     }
   }
 }
