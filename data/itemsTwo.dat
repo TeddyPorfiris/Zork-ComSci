@@ -4,7 +4,7 @@ Openable: false
 Weight: 2
 Pick Up: true
 Room: COCKPIT
-Item Name: medKit
+Item Name: med kit
 Item Description: A small box with equipment to be used to heal yourself when ill/injured.
 Openable: false
 Weight: 2
@@ -22,13 +22,13 @@ Openable: false
 Weight: 1
 Pick Up: true
 Room: MOUNTAINOUS_PATH
-Item Name: waterJug
+Item Name: water jug
 Item Description: A large, portable jug of water.
 Openable: false
 Weight: 1
 Pick Up: true
 Room: RIVER
-Item Name: suspiciousCode
+Item Name: suspicious code
 Item Description: A mysterious piece of paper on the bank of the river. It has a string of numbers written on it.
 Openable: false
 Weight: 1
@@ -40,8 +40,8 @@ Openable: false
 Weight: 2
 Pick Up: true
 Room: MOUNTAIN_RIDGE
-Item Name: wood
-Item Description: A collection of pieces of wooden logs and planks. Can be used for fuel for a fire, crafting weapons/equipment, among other things.
+Item Name: trees
+Item Description: Tall thick trees. Its bark can be used for fuel for a fire, crafting weapons/equipment, among other things.
 Openable: false
 Weight: 1
 Pick Up: true 
@@ -52,7 +52,12 @@ Openable: false
 Weight: 5
 Pick Up: false 
 Room: CLUSTER_OF_BOULDERS
-
+Item Name: climbing gear
+Item Description: Used to trek up large mountains.
+Openable: false
+Weight: 3
+Pick Up: true 
+Room: STORAGE_SPACE
 
 
 

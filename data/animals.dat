@@ -2,4 +2,124 @@ Animal Name: rabbit
 Animal Description: A stray rabbit that can be eaten when killed.
 Dead: false
 Nutrition: 3
-Room: CRASH_SITE
+Room: RANDOM
+Animal Name: rabbit
+Animal Description: A stray rabbit that can be eaten when killed.
+Dead: false
+Nutrition: 3
+Room: RANDOM
+Animal Name: rabbit
+Animal Description: A stray rabbit that can be eaten when killed.
+Dead: false
+Nutrition: 3
+Room: RANDOM
+Animal Name: rabbit
+Animal Description: A stray rabbit that can be eaten when killed.
+Dead: false
+Nutrition: 3
+Room: RANDOM
+Animal Name: rabbit
+Animal Description: A stray rabbit that can be eaten when killed.
+Dead: false
+Nutrition: 3
+Room: RANDOM
+Animal Name: rabbit
+Animal Description: A stray rabbit that can be eaten when killed.
+Dead: false
+Nutrition: 3
+Room: RANDOM
+Animal Name: deer
+Animal Description: A stray deer that can be eaten when killed.
+Dead: false
+Nutrition: 4
+Room: RANDOM
+Animal Name: deer
+Animal Description: A stray deer that can be eaten when killed.
+Dead: false
+Nutrition: 4
+Room: RANDOM
+Animal Name: deer
+Animal Description: A stray deer that can be eaten when killed.
+Dead: false
+Nutrition: 4
+Room: RANDOM
+Animal Name: deer
+Animal Description: A stray deer that can be eaten when killed.
+Dead: false
+Nutrition: 4
+Room: RANDOM
+Animal Name: deer
+Animal Description: A stray deer that can be eaten when killed.
+Dead: false
+Nutrition: 4
+Room: RANDOM
+Animal Name: deer
+Animal Description: A stray deer that can be eaten when killed.
+Dead: false
+Nutrition: 4
+Room: RANDOM
+Animal Name: fox
+Animal Description: A stray fox that can be eaten when killed.
+Dead: false
+Nutrition: 3
+Room: RANDOM
+Animal Name: fox
+Animal Description: A stray fox that can be eaten when killed.
+Dead: false
+Nutrition: 3
+Room: RANDOM
+Animal Name: fox
+Animal Description: A stray fox that can be eaten when killed.
+Dead: false
+Nutrition: 3
+Room: RANDOM
+Animal Name: fox
+Animal Description: A stray fox that can be eaten when killed.
+Dead: false
+Nutrition: 3
+Room: RANDOM
+Animal Name: fox
+Animal Description: A stray fox that can be eaten when killed.
+Dead: false
+Nutrition: 3
+Room: RANDOM
+Animal Name: bird
+Animal Description: A stray bird that can be eaten when killed.
+Dead: false
+Nutrition: 3
+Room: RANDOM
+Animal Name: bird
+Animal Description: A stray bird that can be eaten when killed.
+Dead: false
+Nutrition: 3
+Room: RANDOM
+Animal Name: bird
+Animal Description: A stray bird that can be eaten when killed.
+Dead: false
+Nutrition: 3
+Room: RANDOM
+Animal Name: bird
+Animal Description: A stray bird that can be eaten when killed.
+Dead: false
+Nutrition: 3
+Room: RANDOM
+Animal Name: bird
+Animal Description: A stray bird that can be eaten when killed.
+Dead: false
+Nutrition: 3
+Room: RANDOM
+Animal Name: bird
+Animal Description: A stray bird that can be eaten when killed.
+Dead: false
+Nutrition: 3
+Room: RANDOM
+Animal Name: bear
+Animal Description: A stray bear that can be eaten when killed.
+Dead: false
+Nutrition: 5
+Room: RANDOM
+Animal Name: bear
+Animal Description: A stray bear that can be eaten when killed.
+Dead: false
+Nutrition: 5
+Room: RANDOM

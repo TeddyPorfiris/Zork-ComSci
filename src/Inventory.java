@@ -5,14 +5,17 @@ public class Inventory {
     //has max weight
     private ArrayList<Item> items;
 
+    //constructor (creates an arrayList of Item objects. the arrayList holds all the items that are in a specific room)
     public Inventory(){
         items = new ArrayList<Item>();
     }
 
+    //add item to room (to arrayList of items)
     public boolean addItem(Item item){
         return items.add(item); //returns true if item is added
     }
 
+    //removes item from room (from arrayList of items) and returns the Item object that was removed
     public Item removeItem(String name){
         //checking if item is in their inventory and if it is then it removes the item (the player cannot remove something they don't have in their inventory!)
         for (int i=0; i<items.size(); i++){
@@ -24,11 +27,12 @@ public class Inventory {
         return null;
     }
 
+    //return inventory of items (returns arrayList of Item objects)
     public ArrayList<Item> getInventory(){
         return items;
     }
 
-    //this method checks if the item is in your inventory. if it is then it returns the item. if not then it returns null.
+    //checks if the item is in your inventory. if it is then it returns the item. if not then it returns null.
     public Item contains(String name){
         for (int i=0; i<items.size(); i++){
             if (name.equals(items.get(i).getName()))

@@ -18,7 +18,7 @@ Room Description:  A grassy chunk of flatland.
 Exit Rooms: N-Cliff, E-Forest, S-Mountainous Path
 Room Name: Cliff
 Room Description:  A cutoff of land preventing you from going any further.  
-Exit Rooms: N-Cliff, E-Forest, S-Mountainous Path, W-Crash Site
+Exit Rooms: S-Open Field
 Room Name: Forest
 Room Description:  A vast land full of trees and bushes.  
 Exit Rooms: W-Open Field
@@ -36,31 +36,25 @@ Room Description:  A medium-sized body of water.
 Exit Rooms: E-Rocky Terrain
 Room Name: Mountain Ridge
 Room Description:  A wall of mountain cutting off your path. It can be surpassed but only with proper climbing equipment.  
-Exit Rooms: N-Rocky Terrain, S-1/4 Way Up Left Side of Mountain
-Room Name: 1/4 Way Up Left Side of Mountain
-Room Description: Just a bit up the left side of the mountain.
-Exit Rooms: N-Mountain Ridge, S-1/2 Way Up Left Side of Mountain
-Room Name: 1/2 Way Up Left Side of Mountain
-Room Description:  Half way from the foot of the left side of the mountain.
-Exit Rooms: N-1/4 Way Up Left Side of Mountain, S-Mysterious Room
-Room Name: Mysterious Room
-Room Description:  Hidden room within the mountain itself.
-Exit Rooms: N-1/2 Way Up Left Side of Mountain, S-1/4 way up right side of mountain
-Room Name: 1/4 way up right side of mountain
-Room Description:  Just a bit up the right side of the mountain.
-Exit Rooms: N-Mysterious Room, S-Secret Base
-Room Name: Secret Base
-Room Description:  The hideout of the man that rescued you.
-Exit Rooms: N-1/4 way up right side of mountain, E-Barren Land, S-Small Forest, W-Chunks of Rock
+Exit Rooms: N-Rocky Terrain, S-1/2 Way Up Mountain
+Room Name: 1/2 Way Up Mountain 
+Room Description:  You are half way up this tall mountain.
+Exit Rooms: N-Mountain Ridge, S-Mountain Peak
+Room Name: Mountain Peak
+Room Description:  The mountain's summit
+Exit Rooms: N-1/2 Way Up Mountain, S-Dusty Terrain
+Room Name: Dusty Terrain
+Room Description:  A dusty, open, grey land at the foot of the mountain.
+Exit Rooms: N-Mountain Peak, E-Barren Land
 Room Name: Barren Land
 Room Description: A dirty, rocky, wasteland.
-Exit Rooms: S-Ravine, W-Secret Base
+Exit Rooms: S-Ravine, W-Dusty Terrain
 Room Name: Chunks of Rock
 Room Description:  A mound of large boulders blocking your path.
-Exit Rooms: E-Secret Base
+Exit Rooms: E-Dusty Terrain
 Room Name: Small Forest
 Room Description:  A small area populated by several trees.
-Exit Rooms: N-Rocky Terrain
+Exit Rooms: N-Dusty Terrain, E-Grassy Field
 Room Name: Ravine
 Room Description:  A damp opening in the surface of the planet.
 Exit Rooms: N-Barren Land, E-Hidden Escape Base, S-Grassy Field

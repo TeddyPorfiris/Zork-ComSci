@@ -4,7 +4,7 @@ Openable: true
 Weight: 1
 Pick Up: true
 Room: CAFETERIA
-Item Name: waterJug
+Item Name: water jug
 Item Description: A large, portable jug of water.
 Openable: false
 Weight: 1
@@ -22,7 +22,7 @@ Openable: false
 Weight: 1
 Pick Up: true
 Room: STORAGE
-Item Name: medKit
+Item Name: med kit
 Item Description: A small box with equipment to be used to heal yourself when ill/injured.
 Openable: false
 Weight: 2

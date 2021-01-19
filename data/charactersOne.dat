@@ -1,8 +1,8 @@
-Character Name: Engineer
+Character Name: engineer
 Character Description: One of the many ship mechanics.
-Initial Dialogue: Hey want to hear about your new space jet update? (yes/no)
+Initial Dialogue: Hey! Do you want to hear about one of the updates I added to your space jet? (yes/no)
 Answer One: yes
 Answer Two: no
-Response One: Great! Here it is. bla bla bla... to self destruct and eject, use the command "use self-destruct button" ...bla bla bla... So that's all I have to say. Bye!
-Response Two: Oh ok maybe next time Bye!
+Response One: Great! In an event where there is a large amount of enemies surrounding you, I've added a feature where if you type in the command "use self-destruct button", It will eject you out of your ship, and then activate the ship self destruct sequence. The explosion will blow up the enemies while you are a safe distance away. So that's all I have to say. Bye!
+Response Two: Oh ok maybe next time. Bye!
 Room: HANGAR

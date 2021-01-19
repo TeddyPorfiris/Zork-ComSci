@@ -28,6 +28,8 @@ public class Game {
   private Inventory inventory; //player's inventory 
   private Scanner in = new Scanner(System.in);
   private int hunger = 0;
+  private int time = 0;
+  private boolean firstNightComplete = false;
 
   // This is a MASTER object that contains all of the rooms and is easily
   // accessible.
@@ -293,6 +295,7 @@ public class Game {
     planetFirstDayDescription();
     System.out.println(currentRoom.longDescriptionPlanet());
     System.out.println("\nHunger level: 0/15");
+    System.out.println("\nTime: 12:00pm");
     // Enter the main command loop. Here we repeatedly read commands and
     // execute them until the game is over.
     boolean finished = false;
@@ -311,19 +314,19 @@ public class Game {
   private void printWelcome() {
     System.out.println();
     System.out.println("Welcome to Space Survival!");
-    System.out.println("Space Survival is an action adventure game full of mystery and strategy.");
+    System.out.println("Space Survival is an action adventure game full of adventure and strategy.");
     System.out.println("Type 'help' if you need help.");
     System.out.println();
-    System.out.println("You are aboard a space station located on the outer rims of the Milky Ray.");
-    System.out.println("You have just woken up, and you are currently gathering some equipment from around the ship to take with you before you take your fighter jet and go on your assigned scouting mission.");
-    System.out.println("Your task: Walk around the ship and collect the following items: water jug, laser gun, medical kit, tarp. Return to the hangar once these items are collected.");
+    System.out.println("You are aboard the ICS space station located on the outer rims of the Milky Way.");
+    System.out.println("You have just woken up, and you are currently gathering equipment from around the ship to take with you before you take your fighter jet and go on your assigned scouting mission.");
+    System.out.println("Your task: Walk around the ship and collect the following items: water jug, blaster, med kit, tarp. Return to the hangar once these items are collected to be able to proceed.");
     System.out.println();
     System.out.println(currentRoom.longDescription());
   }
 
   private void planetFirstDayDescription(){
     System.out.println("DAY 1");
-    System.out.println("You wake up inside your broken ship. You are on an unknown planet. DESCRIBE THE PLANET (MENTION HOW YOUR DEVICE SAYS THAT THE PLANET IS UNINHABATED BUT YOU WONDER HOW IT HAS SUCH SIMILAR LIVING CONDITIONS TO EARTH). You don’t know what to do next.");
+    System.out.println("You wake up inside your broken ship. You've crash-landed on one the abandoned ICS military grounds.");
     System.out.println("Besides the equipment you gathered at the station, in your space jet, you also have climbing gear and a torch. However, you noticed as you were crashing that your water jug and tarp flew out of a broken window. It seems to be midday.");
     System.out.println("You need to set up a base before 10:00pm that has a fire and a roof. You also need to collect all the items that you previously packed because they fell out of your inventory in the crash. Drop off all items at the crash site to set up your base");
   }
@@ -344,32 +347,39 @@ public class Game {
       printHelp();
     else if (commandWord.equals("go")){
       hunger++;
-      goRoom(command);
+      time++;
+      return goRoom(command);
     }else if (commandWord.equals("quit")) {
       if (command.hasSecondWord())
         System.out.println("Quit what?");
       else
         return true; // signal that we want to quit
-    }else if (commandWord.equals("jump")){
-      System.out.println("jump up and down");
-
     }else if (commandWord.equals("take")) {
       if (!command.hasSecondWord())
         System.out.println("Take what?");
       else
-        takeItem(command.getSecondWord());
+        if (command.hasThirdWord())
+          takeItem(command.getSecondWord() + " " + command.getThirdWord());
+        else
+          takeItem(command.getSecondWord());
     }else if (commandWord.equals("drop")) {
     if (!command.hasSecondWord())
       System.out.println("Drop what?");
     else
-      dropItem(command.getSecondWord());
+      if (command.hasThirdWord())
+        dropItem(command.getSecondWord() + " " + command.getThirdWord());
+      else
+        dropItem(command.getSecondWord());
     }else if (commandWord.equals("i")){
       System.out.println("You are carrying the following:\n" + inventory + "\nInventory weight: " + inventory.getTotalWeight() + "\n");
     }else if (commandWord.equals("open")){
       if (!command.hasSecondWord())
         System.out.println("Open what?");
       else
-        openItem(command.getSecondWord());
+        if (command.hasThirdWord())
+          openItem(command.getSecondWord() + " " + command.getThirdWord());
+        else
+          openItem(command.getSecondWord());
     }else if (commandWord.equals("talk")){
       if (!command.hasSecondWord() || !command.hasThirdWord())
         System.out.println("Talk to who?");
@@ -384,7 +394,10 @@ public class Game {
       if (!command.hasSecondWord())
         System.out.println("Weigh what?");
       else
-        itemWeight(command.getSecondWord());
+        if (command.hasThirdWord())
+          itemWeight(command.getSecondWord() + " " + command.getThirdWord());
+        else
+          itemWeight(command.getSecondWord());
     }else if (commandWord.equals("fire")){
       if (!command.hasSecondWord() || !command.hasThirdWord())
         System.out.println("Fire at what?");
@@ -395,12 +408,78 @@ public class Game {
         System.out.println("eat what?");
       else
         eat(command.getSecondWord());
-    }
+    }else if (commandWord.equals("request")) {
+      if (!command.hasSecondWord())
+        System.out.println("Request what?");
+      else{
+        request(command.getSecondWord());
+      }
+    }else if (commandWord.equals("read")) {
+      if (!command.hasSecondWord())
+        System.out.println("Read what?");
+      else{
+        if (command.hasThirdWord())
+          read(command.getSecondWord() + " " + command.getThirdWord());
+        else
+          read(command.getSecondWord());
+      }
+    }else if (commandWord.equals("sleep"))
+      sleep();
+
 
     return false;
   }
 
 
+  private void sleep() {
+    if (currentRoom.getRoomName().equalsIgnoreCase("crash site")){ //if the player tries to sleep at the crash site
+      if (firstNightComplete){ //if the first day has been completed, the player can sleep whenever they want.
+        System.out.println("Good morning world!");
+        time = 38; //set time to 7:00am
+        System.out.println(currentRoom.longDescriptionPlanet());
+        System.out.println("Hunger level: " + hunger + "/15");
+        System.out.println("Time: 7:00am");
+        
+      }else{ //if the first day, has not been completed, they need to have set up their base before they can sleep.
+        if (currentRoom.getInventory().inInventory("climbing gear") && currentRoom.getInventory().inInventory("water jug") && currentRoom.getInventory().inInventory("blaster") && currentRoom.getInventory().inInventory("tarp") && currentRoom.getInventory().inInventory("med kit") && currentRoom.getInventory().inInventory("torch") && currentRoom.getInventory().inInventory("rocks") && currentRoom.getInventory().inInventory("wood")){
+          firstNightComplete = true;
+          System.out.println("Good night!\n\n");
+          System.out.println("Good morning world! Spend the day today exploring the planet. The ICS starfleet used this planet to train its military before it was abandoned. Maybe there is a location on the planet that still has funcitoning ships you can use to escape! Remember to get back to the crash site before 10:00pm or else you'll die in the wild!");
+          time = 38; //set time to 7:00am
+          System.out.println(currentRoom.longDescriptionPlanet());
+          System.out.println("Hunger level: " + hunger + "/15");
+          System.out.println("Time: 7:00am");
+        }else
+          System.out.println("You can't sleep yet! You have to set up your base first!");
+        
+      } 
+    }else //if the player tries to sleep somewhere other than the crash site
+      if (currentRoom.getRoomName().equalsIgnoreCase("hangar") || currentRoom.getRoomName().equalsIgnoreCase("dorm") || currentRoom.getRoomName().equalsIgnoreCase("cafeteria") || currentRoom.getRoomName().equalsIgnoreCase("storage") || currentRoom.getRoomName().equalsIgnoreCase("navigation") || currentRoom.getRoomName().equalsIgnoreCase("weapons") || currentRoom.getRoomName().equalsIgnoreCase("washroom"))
+        System.out.println("No time to sleep now!");
+      else
+        System.out.println("You can only sleep at your base at the crash site");
+  }
+
+  private void read(String secondWord) {
+
+    if (inventory.contains(secondWord) != null){ //if the item the player is trying to read is in their inventory
+      if (secondWord.equals("suspiciousCode")) //if the user is trying to read the suspicous code
+        System.out.println("Code: 8864"); 
+      else //if the user is not trying to read the suspicous code
+        System.out.println("I don't understand what you mean...");
+    }else //if the item the player is trying to read is NOT in their inventory
+      System.out.println("You can't read something that isn't in your inventory!");
+  }
+
+  private void request(String secondWord) {
+    if (secondWord.equalsIgnoreCase("backup")){
+      if (currentRoom.getRoomName().equalsIgnoreCase("hangar") || currentRoom.getRoomName().equalsIgnoreCase("dorm") || currentRoom.getRoomName().equalsIgnoreCase("cafeteria") || currentRoom.getRoomName().equalsIgnoreCase("storage") || currentRoom.getRoomName().equalsIgnoreCase("navigation") || currentRoom.getRoomName().equalsIgnoreCase("weapons") || currentRoom.getRoomName().equalsIgnoreCase("washroom"))
+        System.out.println("Why do you need to request backup? You're already at the space station!");
+      else
+        System.out.println("You are too far away from the space station for your distress signal to be recieved.");
+    }else
+      System.out.println("I don't know what you mean...");
+  }
 
   private void eat(String secondWord) {
     if (currentRoom.getAnimals().contains(secondWord) != null){ //if the room player is currently in contains the animal they want to eat
@@ -426,13 +505,26 @@ public class Game {
   }
 
   private void fire(String thirdWord) {
-    if (currentRoom.getAnimals().contains(thirdWord) != null){ //if animal we are firing at is in room
-      Animal deadAnimal = currentRoom.getAnimals().contains(thirdWord); //get animal we want to fire at
-      deadAnimal.setIsDead(true); //set that the animal is dead to true
-      System.out.println("The " + thirdWord + " has been shot and killed.");
+    if (inventory.contains("blaster") != null){
+      if (currentRoom.getAnimals().contains(thirdWord) != null){ //if animal we are firing at is in room
+        Animal deadAnimal = currentRoom.getAnimals().contains(thirdWord); //get animal we want to fire at
+        deadAnimal.setIsDead(true); //set that the animal is dead to true
+        System.out.println("The " + thirdWord + " has been shot and killed.");
 
-    }else //if animal we are firing at is not in room
-      System.out.println("You are firing at something that isn't there!");
+      }else if (thirdWord.equalsIgnoreCase("trees")){
+        System.out.println("The trees have been blasted down. Their wood is now salvageable.");
+        currentRoom.getInventory().removeItem("trees");
+        Item wood = new Item();
+        wood.setName("wood");
+        wood.setDescription("Large strips of wood.");
+        wood.setOpenable(false);
+        wood.setWeight(2);
+        wood.setPickUpable(true);
+        currentRoom.getInventory().addItem(wood);
+      }else
+        System.out.println("Why are you firing at that?");
+    }else
+      System.out.println("You don't have your blaster with you. You cannot fire at anything without it!");
   }
 
   private void itemWeight(String secondWord) {
@@ -445,7 +537,7 @@ public class Game {
   
   private boolean proceed(String thirdWord) {
     //in order to proceed from first part of game, you have to be in the hangar and have the following items:
-    if (thirdWord.equalsIgnoreCase("hangar") && inventory.inInventory("waterJug") && inventory.inInventory("blaster") && inventory.inInventory("medKit") && inventory.inInventory("tarp")){
+    if (thirdWord.equalsIgnoreCase("hangar") && inventory.inInventory("water jug") && inventory.inInventory("blaster") && inventory.inInventory("med kit") && inventory.inInventory("tarp") && currentRoom.getRoomName().equalsIgnoreCase("hangar")){
       return spaceFight();
     }else
       System.out.println("You can't proceed just yet!");
@@ -456,39 +548,39 @@ public class Game {
   private boolean spaceFight() {
     //creating hashmaps full of command option
     HashMap<String, String> spaceFightPart1Choices = new HashMap<String, String>(); 
-    spaceFightPart1Choices.put("go north", "The enemies have surrounded you! There's nowhere to go!");
-    spaceFightPart1Choices.put("go south", "The enemies have surrounded you! There's nowhere to go!");
-    spaceFightPart1Choices.put("go east", "The enemies have surrounded you! There's nowhere to go!");
-    spaceFightPart1Choices.put("go west", "The enemies have surrounded you! There's nowhere to go!");
+    spaceFightPart1Choices.put("go north", "The aliens have surrounded you! There's nowhere to go!");
+    spaceFightPart1Choices.put("go south", "The aliens have surrounded you! There's nowhere to go!");
+    spaceFightPart1Choices.put("go east", "The aliens have surrounded you! There's nowhere to go!");
+    spaceFightPart1Choices.put("go west", "The aliens have surrounded you! There's nowhere to go!");
     spaceFightPart1Choices.put("request backup", "There's no time to request backup!");
     spaceFightPart1Choices.put("fire", "\nNice! You destroyed some of their ships\n");
 
     HashMap<String, String> spaceFightPart2Choices = new HashMap<String, String>(); 
-    spaceFightPart2Choices.put("go north", "\nGood job! Dodging the bullets allowed both enemy ships to blow themselves up in the cross fire!\n");
-    spaceFightPart2Choices.put("go south", "\nGood job! Dodging the bullets allowed both enemy ships to blow themselves up in the cross fire!\n");
+    spaceFightPart2Choices.put("go north", "\nGood job! Dodging the bullets allowed both alien ships to blow themselves up in the cross fire!\n");
+    spaceFightPart2Choices.put("go south", "\nGood job! Dodging the bullets allowed both alien ships to blow themselves up in the cross fire!\n");
     spaceFightPart2Choices.put("go east", "You can't go east! You'll run into the bullets!");
     spaceFightPart2Choices.put("go west", "You can't go west! You'll run into the bullets!");
     spaceFightPart2Choices.put("request backup", "There's no time to request backup!");
     spaceFightPart2Choices.put("fire", "You can't fire in two directions at once!");
 
     HashMap<String, String> spaceFightPart3Choices = new HashMap<String, String>(); 
-    spaceFightPart3Choices.put("go north", "The enemies have surrounded you! There's nowhere to go!");
-    spaceFightPart3Choices.put("go south", "The enemies have surrounded you! There's nowhere to go!");
-    spaceFightPart3Choices.put("go east", "The enemies have surrounded you! There's nowhere to go!");
-    spaceFightPart3Choices.put("go west", "The enemies have surrounded you! There's nowhere to go!");
+    spaceFightPart3Choices.put("go north", "The aliens have surrounded you! There's nowhere to go!");
+    spaceFightPart3Choices.put("go south", "The aliens have surrounded you! There's nowhere to go!");
+    spaceFightPart3Choices.put("go east", "The aliens have surrounded you! There's nowhere to go!");
+    spaceFightPart3Choices.put("go west", "The aliens have surrounded you! There's nowhere to go!");
     spaceFightPart3Choices.put("request backup", "There's no time to request backup!");
-    spaceFightPart3Choices.put("fire", "You don't have enough fire power to take out the whole enemy fleet!");
-    spaceFightPart3Choices.put("use self-destruct button", "\nYou escape the enemies while blowing them up but you and parts of your ship crashland on an unknown planet.\n");
+    spaceFightPart3Choices.put("fire", "You don't have enough fire power to take out the whole alien fleet!");
+    spaceFightPart3Choices.put("use self-destruct button", "\nYou escape the aliens while blowing them up but you and parts of your ship crashland on an unknown planet.\n");
 
 
     
-    System.out.println("You are on your flight patrol but the enemy fleet start attacking you. What do you do?");
+    System.out.println("You are on your space jet performing your scouting mission. All of the sudden, an alien fleet approaches and begins to attack you! What do you do?");
     boolean spaceFightPart1 = rightAnswer(spaceFightPart1Choices, "fire", null);
     if (spaceFightPart1){
-      System.out.println("Oh no! Enemy ships are shooting from east and west! What do you do?");
+      System.out.println("Oh no! Alien ships are shooting from east and west! What do you do?");
       boolean spaceFightPart2 = rightAnswer(spaceFightPart2Choices, "go north", "go south");
       if (spaceFightPart2){
-        System.out.println("The enemies are closing in on you! One giant blast can take out the whole fleet but you don't have enough fire power to create an explosion like that. What do you do?");
+        System.out.println("The aliens are closing in on you! One giant blast can take out the whole fleet but you don't have enough fire power to create an explosion like that. What do you do?");
         boolean spaceFightPart3 = rightAnswer(spaceFightPart3Choices, "use self-destruct button", null);
         if (spaceFightPart3)
           return stageTwo();
@@ -635,9 +727,11 @@ public class Game {
    * and a list of the command words.
    */
   private void printHelp() {
+    /*
     System.out.println("You are lost. You are alone. You wander");
     System.out.println("around at Monash Uni, Peninsula Campus.");
     System.out.println();
+    */
     System.out.println("Your command words are:");
     parser.showCommands();
   }
@@ -648,26 +742,144 @@ public class Game {
    */
 
   //CREATE THIRD WORD FOR COMMAND BY GOING TO COMMAND FILE AND ADDING THIRD WORD
-  private void goRoom(Command command) {
+  private boolean goRoom(Command command) {
     if (!command.hasSecondWord()) {
       // if there is no second word, we don't know where to go...
       System.out.println("Go where?");
-      return;
     }
     String direction = command.getSecondWord();
     // Try to leave current room.
     Room nextRoom = currentRoom.nextRoom(direction);
     if (nextRoom == null)
-      System.out.println("There is no door!");
+      System.out.println("You can't go that way!");
     else {
       currentRoom = nextRoom;
+    
+      //be able to go past mountain only if you have climbing gear 
+      if (currentRoom.getRoomName().equalsIgnoreCase("1/2 Way Up Mountain")){
+        if (inventory.contains("climbing gear") == null){ //if you don't have climbing gear in your inventory
+          currentRoom = currentRoom.nextRoom("north");
+          System.out.println("You can't surpass this mountain without your climbing gear!");
+        }
+      }
+      
+      if (currentRoom.getRoomName().equalsIgnoreCase("Mountain Peak")){
+        if (inventory.contains("climbing gear") == null){ //if you don't have climbing gear in your inventory
+          currentRoom = currentRoom.nextRoom("south");
+          System.out.println("You can't surpass this mountain without your climbing gear!");
+        }
+      }
+
+      
+
+
+      
+
+      //hunger/time
+
+      //if one is on the first stage of the game (on the space station), don't include any time/hunger metrics
       if (currentRoom.getRoomName().equalsIgnoreCase("hangar") || currentRoom.getRoomName().equalsIgnoreCase("dorm") || currentRoom.getRoomName().equalsIgnoreCase("cafeteria") || currentRoom.getRoomName().equalsIgnoreCase("storage") || currentRoom.getRoomName().equalsIgnoreCase("navigation") || currentRoom.getRoomName().equalsIgnoreCase("weapons") || currentRoom.getRoomName().equalsIgnoreCase("washroom")){
         hunger = 0;
+        time = 0;
         System.out.println(currentRoom.longDescription());
-      }else{  
+      }else{ //if we are in one of the rooms on the planet
         System.out.println(currentRoom.longDescriptionPlanet());
+        //display hunger level
         System.out.println("Hunger level: " + hunger + "/15");
+
+        //if hunger is greater than 15, you die
+        if (hunger > 15){
+          System.out.println("You've died from hunger! The end.");
+          return true;
+        }
+
+        //if time reaches 48, then bring it back to zero (12:00 am)
+        if (time == 48)
+          time = 0;
+
+        String timeDisplay = "";
+
+        //displaying proper time based off of time variable value
+        if (time == 0 || time == 1)
+          timeDisplay = "Time: 12:00pm";
+        else if (time == 2 || time == 3)
+          timeDisplay = "Time: 1:00pm";
+        else if (time == 4 || time == 5)
+          timeDisplay = "Time: 2:00pm";
+        else if (time == 6 || time == 7)
+          timeDisplay = "Time: 3:00pm";
+        else if (time == 8 || time == 9)
+        timeDisplay = "Time: 4:00pm";
+        else if (time == 10 || time == 11) 
+          timeDisplay = "Time: 5:00pm";
+        else if (time == 12 || time == 13)
+          timeDisplay = "Time: 6:00pm";
+        else if (time == 14 || time == 15)
+          timeDisplay = "Time: 7:00pm";
+        else if (time == 16 || time == 17)
+          timeDisplay = "Time: 8:00pm";
+        else if (time == 18 || time == 19)
+          timeDisplay = "Time: 9:00pm";
+        else if (time == 20 || time == 21)
+          timeDisplay = "Time: 10:00pm";
+        else if (time == 22 || time == 23)
+          timeDisplay = "Time: 11:00pm";
+        else if (time == 24 || time == 25)
+          timeDisplay = "Time: 12:00am";
+        else if (time == 26 || time == 27)
+          timeDisplay = "Time: 1:00am";
+        else if (time == 28 || time == 29)
+          timeDisplay = "Time: 2:00am";
+        else if (time == 30 || time == 31)
+          timeDisplay = "Time: 3:00am";
+        else if (time == 32 || time == 33)
+          timeDisplay = "Time: 4:00am";
+        else if (time == 34 || time == 35)
+          timeDisplay = "Time: 5:00am";
+        else if (time == 36 || time == 37)
+          timeDisplay = "Time: 6:00am";
+        else if (time == 38 || time == 39)
+          timeDisplay = "Time: 7:00am";
+        else if (time == 40 || time == 41)
+          timeDisplay = "Time: 8:00am";
+        else if (time == 42 || time == 43)
+          timeDisplay = "Time: 9:00am";
+        else if (time == 44 || time == 45)
+          timeDisplay = "Time: 10:00am";
+        else if (time == 46 || time == 47)
+          timeDisplay = "Time: 11:00am";
+
+        System.out.println(timeDisplay);
+
+        //if time is 10:00pm (time == 22) and the player is not back to the crash site base and has not gathered all the items to the crash shite
+        if ((time == 20) && (!currentRoom.getRoomName().equalsIgnoreCase("CRASH_SITE") && !currentRoom.getInventory().inInventory("climbing gear") && !currentRoom.getInventory().inInventory("water jug") && !currentRoom.getInventory().inInventory("blaster") && !currentRoom.getInventory().inInventory("tarp") && !currentRoom.getInventory().inInventory("med kit") && !currentRoom.getInventory().inInventory("torch") && !currentRoom.getInventory().inInventory("rocks") && !currentRoom.getInventory().inInventory("wood"))){
+          System.out.println("You didn't complete your base in time! You died.");
+          return true;
+        }
+
+
+
+      }
+
+      //prompt user for code if they reach the hidden escape base
+      if (currentRoom.getRoomName().equalsIgnoreCase("Hidden Escape Base")){
+        System.out.println("You have made it to the escape base. Here, several still-intact ships are stored. Please type in code to enter. If you do not know the code, type the word \"stop\" to exit and continue to look around the planet.");
+        String code = in.nextLine();
+        while (!code.equals("8864")){
+          if (code.equalsIgnoreCase("stop"))
+            break;
+          System.out.println("Access denied. Wrong code.");
+          code = in.nextLine();
+        }
+      
+        if (code.equals("8864")){
+          System.out.println("Access Granted. You've entered the escape base, boarded the ship, and flew away from the planet.");
+          System.out.println("Congradulations! You've escaped!");
+          return true;
+        }
+      
       }
     }
+    return false;
   }
 }

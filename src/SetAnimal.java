@@ -4,6 +4,7 @@ public class SetAnimal {
     
     private ArrayList<Animal> animals;
 
+    //constructor (creates an arrayList of Animal objects. the arrayList holds all the animals that are in a specific room)
     public SetAnimal(){
         animals = new ArrayList<Animal>();
     }
@@ -14,8 +15,6 @@ public class SetAnimal {
             if (name.equals(animals.get(i).getName()))
                 return animals.remove(i);
         }
-
-        //if we get through the for loop, then the item must not be in their inventory
         return null;
     }
 
@@ -23,12 +22,14 @@ public class SetAnimal {
         return animals;
     }
 
+    //add animal to room (to arrayList of animals)
     public boolean addAnimal(Animal animal){
         return animals.add(animal); //returns true if animal is added
     } 
-
+    
+    //removes animal from room (from arrayList of animals) and returns the Animal object that was removed
     public Animal removeAnimal(Animal animal){
-        //checking if item is in room and if it is then it removes the animal (the player cannot remove something that isn't in the room they're currently in!)
+        //checking if animal is in room and if it is then it removes the animal (the player cannot remove something that isn't in the room they're currently in!)
         for (int i=0; i<animals.size(); i++){
             if (animal == animals.get(i))
                 return animals.remove(i);
@@ -48,7 +49,7 @@ public class SetAnimal {
         return null;
     }
 
-    //displays inventory
+    //cleanly displays whichever animals are in the room.
     public String toString(){
 
         if (animals.size() == 0)

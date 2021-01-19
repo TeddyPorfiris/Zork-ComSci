@@ -27,7 +27,6 @@ public class Room {
   private String description;
   private HashMap<String, Room> exits; // stores exits of this room.
   private Inventory inventory;
-  //private HashMap<String, GameCharacter> characters; //characters in room 
   private SetCharacter characters;
   private SetAnimal animals;
 
@@ -53,14 +52,17 @@ public class Room {
     animals = new SetAnimal();
   }
 
+  //get inventory of room
   public Inventory getInventory(){
     return inventory;
   }
 
+  //get characters in room
   public SetCharacter getCharacters(){
     return characters;
   }
 
+  //get animals in room
   public SetAnimal getAnimals(){
     return animals;
   }
