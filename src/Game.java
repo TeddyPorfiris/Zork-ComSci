@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 /**
@@ -265,7 +266,7 @@ public class Game {
       currentRoom = masterRoomMap.get("CRASH_SITE");
       inventory = new Inventory();
       initItems("data/itemsTwo.dat");
-      initCharacters("data/charactersTwo.dat");
+      //initCharacters("data/charactersTwo.dat");
       initAnimals("data/animals.dat");
       return playStageTwo();
 
@@ -325,10 +326,9 @@ public class Game {
   }
 
   private void planetFirstDayDescription(){
-    System.out.println("DAY 1");
-    System.out.println("You wake up inside your broken ship. You've crash-landed on one the abandoned ICS military grounds.");
-    System.out.println("Besides the equipment you gathered at the station, in your space jet, you also have climbing gear and a torch. However, you noticed as you were crashing that your water jug and tarp flew out of a broken window. It seems to be midday.");
-    System.out.println("You need to set up a base before 10:00pm that has a fire and a roof. You also need to collect all the items that you previously packed because they fell out of your inventory in the crash. Drop off all items at the crash site to set up your base");
+    System.out.println("You wake up inside your broken ship. You've crash-landed on one the abandoned planets used as ICS military grounds.");
+    System.out.println("Besides the equipment you gathered at the station, in your space jet, you also have a torch and a book full of recipes you can use to craft other items. However, you noticed as you were crashing that your water jug and tarp flew out of a broken window. It seems to be midday.");
+    System.out.println("You need to set up a base before 10:00pm that has a fire (you must craft this) and a roof. You also need to collect all the items that you previously packed because they fell out of your inventory during the crash. Drop off all items at the crash site to set up your base.");
   }
 
   /**
@@ -425,10 +425,177 @@ public class Game {
       }
     }else if (commandWord.equals("sleep"))
       sleep();
+    else if (commandWord.equals("craft")) {
+      if (command.hasThirdWord())
+        craft(command.getSecondWord() + " " + command.getThirdWord());
+      else
+        craft(command.getSecondWord());
+      
+    }
 
 
     return false;
   }
+
+
+  private void craft(String secondWord) {
+    ArrayList<String> craftableItems = new ArrayList<String>();
+    boolean notCraftable;
+    
+    //I went on stack overflow here to learn how to iterate through HashMaps: https://stackoverflow.com/questions/1066589/iterate-through-a-hashmap
+    for (Map.Entry<String, ArrayList<String>> entry : craftableRecipes().entrySet()) {
+      String itemName = entry.getKey();
+      ArrayList<String> recipe = entry.getValue();
+
+      notCraftable = true;
+
+      //go through recipe and check if each Item in the recipe is in the player's inventory.
+      for (int i=0; i<recipe.size(); i++){
+        if (inventory.contains(recipe.get(i)) == null){ //if player does not have an Item from the recipe in their inventory
+          notCraftable = false; 
+        }
+      }
+
+      if (notCraftable) //if notCraftable is true (i.e. the player has all the Items from the recipe in their inventory)
+        craftableItems.add(itemName);
+      }
+
+      if (secondWord == null){ //if there is no secondWord (i.e. the player just wants to see the items they have the ability to craft)
+        System.out.println("\nCraftable Items");
+        System.out.println("---------------");
+        for (int i=0; i<craftableItems.size(); i++){
+          System.out.println("  - " + craftableItems.get(i) + " (Recipe: " + craftableRecipes().get(craftableItems.get(i)).toString() + ")");
+        }
+      
+      }
+      
+      else{ //if the player wants to craft a specific item (secondWord is the item) 
+        if (craftableItems.contains(secondWord)){ //if the item the player wants to craft is one of the items they have the ability to craft (all craftable items are held within the arrayList craftableItems)
+          ArrayList<String> desiredRecipe = craftableRecipes().get(secondWord); //get the recepie of the item they want to craft
+          
+          //removing Items from player inventory that are needed to craft the desired Item. 
+          for (int i=0; i<desiredRecipe.size(); i++){
+            inventory.removeItem(desiredRecipe.get(i));
+          }
+
+          inventory.addItem(defineCraftedItem(secondWord));
+          System.out.println("The " + secondWord + " has been added to your inventory.");
+
+        }
+        else //the player does not have the certain Items needed to craft the item they want to craft
+          System.out.println("You do not have the required materials to craft this item.");
+      }
+
+      
+  }
+
+  
+
+  private Item defineCraftedItem(String secondWord) {
+
+    Item craftedItem = new Item();
+
+    //if the item the player wants to craft is a camp fire
+    if (secondWord.equalsIgnoreCase("camp fire")){
+      //create a new Item object to be a camp fire
+      craftedItem.setName("camp fire");
+      craftedItem.setDescription("A small fire to keep you are your base warm at night.");
+      craftedItem.setOpenable(false);
+      craftedItem.setPickUpable(true);
+      craftedItem.setWeight(2);
+    }
+
+    else if (secondWord.equalsIgnoreCase("climbing gear")){
+      craftedItem.setName("climbing gear");
+      craftedItem.setDescription("Used to trek up large mountains.");
+      craftedItem.setOpenable(false);
+      craftedItem.setPickUpable(true);
+      craftedItem.setWeight(3);
+    }
+
+    else if (secondWord.equalsIgnoreCase("magnifying glass")){
+      craftedItem.setName("magnifying glass");
+      craftedItem.setDescription("Allows the user to read small text and view objects close-up.");
+      craftedItem.setOpenable(false);
+      craftedItem.setPickUpable(true);
+      craftedItem.setWeight(1);
+    }
+
+    else if (secondWord.equalsIgnoreCase("flash light")){
+      craftedItem.setName("flash light");
+      craftedItem.setDescription("Grants user a large beam of light and warmth. Allows user to stay up until 12:00am instead of 10:00pm.");
+      craftedItem.setOpenable(false);
+      craftedItem.setPickUpable(true);
+      craftedItem.setWeight(2);
+    }
+
+
+    else if (secondWord.equalsIgnoreCase("ship statue")){
+      craftedItem.setName("ship statue");
+      craftedItem.setDescription("A little wooden statue of an ICS space ship used for decoration!");
+      craftedItem.setOpenable(false);
+      craftedItem.setPickUpable(true);
+      craftedItem.setWeight(1);
+    }
+
+    return craftedItem;
+
+
+
+  }
+
+  private HashMap<String, ArrayList<String>> craftableRecipes() {
+    //creating a hashmap that holds all the item names and their corresponding recipes a player can craft
+    HashMap<String, ArrayList<String>> allRecipes = new HashMap<String, ArrayList<String>>();
+
+    //camp fire
+    ArrayList<String> campFireRecipe = new ArrayList<String>();
+    campFireRecipe.add("wood");
+    campFireRecipe.add("rocks");
+    allRecipes.put("camp fire", campFireRecipe); //ex. one can craft a camp fire. the items required are wood and rocks, stored in the campFireRecipe arrayList
+
+    //climbing gear
+    ArrayList<String> climbingGearRecipe = new ArrayList<String>();
+    climbingGearRecipe.add("rocks");
+    allRecipes.put("climbing gear", climbingGearRecipe);
+
+    //magnifying glass
+    ArrayList<String> magnifyingGlassRecipe = new ArrayList<String>();
+    magnifyingGlassRecipe.add("rocks");
+    magnifyingGlassRecipe.add("sand");
+    allRecipes.put("magnifying glass", magnifyingGlassRecipe);
+
+    //flash light
+    ArrayList<String> flashLightRecipe = new ArrayList<String>();
+    flashLightRecipe.add("rocks");
+    flashLightRecipe.add("wood");
+    flashLightRecipe.add("torch");
+    allRecipes.put("flash light", flashLightRecipe);
+    
+
+    //ship statue
+    ArrayList<String> statueRecipe = new ArrayList<String>();
+    statueRecipe.add("wood");
+    allRecipes.put("ship statue", statueRecipe);
+
+
+
+    return allRecipes;
+
+  }
+
+
+  private void recipes(){
+    //print out all craftable items, their descriptions, and their recipes.
+    System.out.println("\nItems");
+    System.out.println("-----");
+    System.out.println("  - camp fire: a small fire to keep you are your base warm at night. (Recipe: [wood, rocks])");
+    System.out.println("  - climbing gear: used to trek up large mountains. (Recipe: [rocks])");
+    System.out.println("  - magnifying glass: allows the user to read small text and view objects close-up. (Recipe: [rocks, sand])");
+    System.out.println("  - flash light: grants user a large beam of light and warmth. allows user to stay up until 12:00am instead of 10:00pm. (Recipe: [torch, rocks, wood])");
+    System.out.println("  - ship statue: a little wooden statue of an ICS space ship used for decoration! (Recipe: [wood])");
+  }
+
 
 
   private void sleep() {
@@ -441,7 +608,7 @@ public class Game {
         System.out.println("Time: 7:00am");
         
       }else{ //if the first day, has not been completed, they need to have set up their base before they can sleep.
-        if (currentRoom.getInventory().inInventory("climbing gear") && currentRoom.getInventory().inInventory("water jug") && currentRoom.getInventory().inInventory("blaster") && currentRoom.getInventory().inInventory("tarp") && currentRoom.getInventory().inInventory("med kit") && currentRoom.getInventory().inInventory("torch") && currentRoom.getInventory().inInventory("rocks") && currentRoom.getInventory().inInventory("wood")){
+        if (currentRoom.getInventory().inInventory("recipe book") && currentRoom.getInventory().inInventory("water jug") && currentRoom.getInventory().inInventory("blaster") && currentRoom.getInventory().inInventory("tarp") && currentRoom.getInventory().inInventory("med kit") && currentRoom.getInventory().inInventory("torch") && currentRoom.getInventory().inInventory("camp fire")){
           firstNightComplete = true;
           System.out.println("Good night!\n\n");
           System.out.println("Good morning world! Spend the day today exploring the planet. The ICS starfleet used this planet to train its military before it was abandoned. Maybe there is a location on the planet that still has funcitoning ships you can use to escape! Remember to get back to the crash site before 10:00pm or else you'll die in the wild!");
@@ -463,10 +630,20 @@ public class Game {
   private void read(String secondWord) {
 
     if (inventory.contains(secondWord) != null){ //if the item the player is trying to read is in their inventory
-      if (secondWord.equals("suspiciousCode")) //if the user is trying to read the suspicous code
-        System.out.println("Code: 8864"); 
+      if (secondWord.equals("suspicious code")){ //if the user is trying to read the suspicous code
+
+        if (inventory.contains("magnifying glass") != null)
+          System.out.println("Code: 8864");
+        else
+          System.out.println("The writing on the paper is too small to read. Use a magnifying glass to read it!");
+
+      }else if (secondWord.equalsIgnoreCase("recipe book")) 
+        recipes();
       else //if the user is not trying to read the suspicous code
         System.out.println("I don't understand what you mean...");
+
+
+
     }else //if the item the player is trying to read is NOT in their inventory
       System.out.println("You can't read something that isn't in your inventory!");
   }
@@ -759,18 +936,39 @@ public class Game {
       if (currentRoom.getRoomName().equalsIgnoreCase("1/2 Way Up Mountain")){
         if (inventory.contains("climbing gear") == null){ //if you don't have climbing gear in your inventory
           currentRoom = currentRoom.nextRoom("north");
-          System.out.println("You can't surpass this mountain without your climbing gear!");
+          System.out.println("You can't surpass this mountain without your climbing gear! If you haven't made climbing gear, craft it.");
         }
       }
       
       if (currentRoom.getRoomName().equalsIgnoreCase("Mountain Peak")){
         if (inventory.contains("climbing gear") == null){ //if you don't have climbing gear in your inventory
           currentRoom = currentRoom.nextRoom("south");
-          System.out.println("You can't surpass this mountain without your climbing gear!");
+          System.out.println("You can't surpass this mountain without your climbing gear! If you haven't made climbing gear, craft it.");
         }
       }
 
-      
+
+      //add rocks/trees whenever the player enters the mountain ridge/forest room respectively
+      if (currentRoom.getRoomName().equalsIgnoreCase("forest") || currentRoom.getRoomName().equalsIgnoreCase("small forest")){
+        Item trees = new Item();
+        trees.setName("trees");
+        trees.setDescription("Tall thick trees. Its bark can be used for fuel for a fire, crafting weapons/equipment, among other things.");
+        trees.setOpenable(false);
+        trees.setPickUpable(false);
+        trees.setWeight(7);
+        currentRoom.getInventory().addItem(trees);
+      }
+
+      if (currentRoom.getRoomName().equalsIgnoreCase("mountain ridge")){
+        Item rocks = new Item();
+        rocks.setName("rocks");
+        rocks.setDescription("A collection of small rocks. Can be used for throwing, creating sparks, sharpening blades, among other things.");
+        rocks.setOpenable(false);
+        rocks.setPickUpable(true);
+        rocks.setWeight(2);
+        currentRoom.getInventory().addItem(rocks);
+      }
+
 
 
       
@@ -793,7 +991,7 @@ public class Game {
           return true;
         }
 
-        //if time reaches 48, then bring it back to zero (12:00 am)
+        //if time reaches 48, then bring it back to zero (12:00 pm)
         if (time == 48)
           time = 0;
 
@@ -851,11 +1049,34 @@ public class Game {
 
         System.out.println(timeDisplay);
 
-        //if time is 10:00pm (time == 22) and the player is not back to the crash site base and has not gathered all the items to the crash shite
-        if ((time == 20) && (!currentRoom.getRoomName().equalsIgnoreCase("CRASH_SITE") && !currentRoom.getInventory().inInventory("climbing gear") && !currentRoom.getInventory().inInventory("water jug") && !currentRoom.getInventory().inInventory("blaster") && !currentRoom.getInventory().inInventory("tarp") && !currentRoom.getInventory().inInventory("med kit") && !currentRoom.getInventory().inInventory("torch") && !currentRoom.getInventory().inInventory("rocks") && !currentRoom.getInventory().inInventory("wood"))){
-          System.out.println("You didn't complete your base in time! You died.");
-          return true;
+
+        if (!firstNightComplete){
+          //if time is 10:00pm (time == 20) and the player is not back to the crash site base and has not gathered all the items to the crash site
+          if (time == 20){
+            if (!currentRoom.getRoomName().equalsIgnoreCase("CRASH SITE")){
+              System.out.println("You didn't complete your base in time! You died.");
+              return true;
+            }else{
+              if (!currentRoom.getInventory().inInventory("recipe book") && !currentRoom.getInventory().inInventory("water jug") && !currentRoom.getInventory().inInventory("blaster") && !currentRoom.getInventory().inInventory("tarp") && !currentRoom.getInventory().inInventory("med kit") && !currentRoom.getInventory().inInventory("torch") && !currentRoom.getInventory().inInventory("camp fire"))
+              System.out.println("You didn't complete your base in time! You died.");
+              return true;
+            }
+          }
+        }else{
+          if (inventory.contains("flash light") != null){
+            if (time == 24){
+              System.out.println("You stayed out too late! You died.");
+              return true;
+            }
+          }else{
+            if (time == 20){
+              System.out.println("You stayed out too late! You died.");
+              return true;
+            }
+
+          }
         }
+        
 
 
 

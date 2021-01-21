@@ -10,6 +10,12 @@ Openable: false
 Weight: 2
 Pick Up: true
 Room: STORAGE_SPACE
+Item Name: recipe book
+Item Description: A book containing all recipes one can use to craft items. 
+Openable: false
+Weight: 2
+Pick Up: true
+Room: STORAGE_SPACE
 Item Name: torch
 Item Description: A flashlight that produces a great beam of light.
 Openable: false
@@ -34,30 +40,18 @@ Openable: false
 Weight: 1
 Pick Up: true
 Room: RIVER
-Item Name: rocks
-Item Description: A collection of small rocks. Can be used for throwing, creating sparks, sharpening blades, among other things.
-Openable: false
-Weight: 2
-Pick Up: true
-Room: MOUNTAIN_RIDGE
-Item Name: trees
-Item Description: Tall thick trees. Its bark can be used for fuel for a fire, crafting weapons/equipment, among other things.
-Openable: false
-Weight: 1
-Pick Up: true 
-Room: FOREST
 Item Name: boulders
 Item Description: A piece of giant rock.
 Openable: false
 Weight: 5
 Pick Up: false 
 Room: CLUSTER_OF_BOULDERS
-Item Name: climbing gear
-Item Description: Used to trek up large mountains.
+Item Name: sand
+Item Description: A large accumulation of sand.
 Openable: false
-Weight: 3
+Weight: 2
 Pick Up: true 
-Room: STORAGE_SPACE
+Room: OCEAN
 
 
 

@@ -15,7 +15,7 @@ Room Description:  A large body of water to the west of your crash site.
 Exit Rooms: E-Crash Site
 Room Name: Open Field
 Room Description:  A grassy chunk of flatland.  
-Exit Rooms: N-Cliff, E-Forest, S-Mountainous Path
+Exit Rooms: N-Cliff, E-Forest, S-Mountainous Path, W-Crash Site
 Room Name: Cliff
 Room Description:  A cutoff of land preventing you from going any further.  
 Exit Rooms: S-Open Field
@@ -45,7 +45,7 @@ Room Description:  The mountain's summit
 Exit Rooms: N-1/2 Way Up Mountain, S-Dusty Terrain
 Room Name: Dusty Terrain
 Room Description:  A dusty, open, grey land at the foot of the mountain.
-Exit Rooms: N-Mountain Peak, E-Barren Land
+Exit Rooms: N-Mountain Peak, E-Barren Land, S-Small Forest, W-Chunks of Rock
 Room Name: Barren Land
 Room Description: A dirty, rocky, wasteland.
 Exit Rooms: S-Ravine, W-Dusty Terrain
